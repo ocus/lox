@@ -6,10 +6,13 @@ import java.util.List;
 import static fr.ocus.lox.jlox.TokenType.BANG;
 import static fr.ocus.lox.jlox.TokenType.BANG_EQUAL;
 import static fr.ocus.lox.jlox.TokenType.EOF;
+import static fr.ocus.lox.jlox.TokenType.EQUAL;
 import static fr.ocus.lox.jlox.TokenType.EQUAL_EQUAL;
 import static fr.ocus.lox.jlox.TokenType.FALSE;
 import static fr.ocus.lox.jlox.TokenType.GREATER;
 import static fr.ocus.lox.jlox.TokenType.GREATER_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.IDENTIFIER;
+import static fr.ocus.lox.jlox.TokenType.LEFT_BRACE;
 import static fr.ocus.lox.jlox.TokenType.LEFT_PAREN;
 import static fr.ocus.lox.jlox.TokenType.LESS;
 import static fr.ocus.lox.jlox.TokenType.LESS_EQUAL;
@@ -18,12 +21,14 @@ import static fr.ocus.lox.jlox.TokenType.NIL;
 import static fr.ocus.lox.jlox.TokenType.NUMBER;
 import static fr.ocus.lox.jlox.TokenType.PLUS;
 import static fr.ocus.lox.jlox.TokenType.PRINT;
+import static fr.ocus.lox.jlox.TokenType.RIGHT_BRACE;
 import static fr.ocus.lox.jlox.TokenType.RIGHT_PAREN;
 import static fr.ocus.lox.jlox.TokenType.SEMICOLON;
 import static fr.ocus.lox.jlox.TokenType.SLASH;
 import static fr.ocus.lox.jlox.TokenType.STAR;
 import static fr.ocus.lox.jlox.TokenType.STRING;
 import static fr.ocus.lox.jlox.TokenType.TRUE;
+import static fr.ocus.lox.jlox.TokenType.VAR;
 
 /**
  * @author Matthieu Honel <ocus51@gmail.com>
@@ -31,20 +36,29 @@ import static fr.ocus.lox.jlox.TokenType.TRUE;
  */
 //
 // Grammar:
-//    program        → statement* EOF ;
+//    program        → declaration* EOF ;
+//    declaration    → varDecl
+//                   | statement ;
 //    statement      → exprStmt
-//                   | printStmt ;
+//                   | printStmt
+//                   | block ;
+//    block          → "{" declaration* "}" ;
+//    varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
 //    exprStmt       → expression ";" ;
 //    printStmt      → "print" expression ";" ;
-//    expression     → equality ;
+//    expression     → assignment ;
+//    assignment     → identifier "=" assignment
+//                   | equality ;
 //    equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 //    comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
 //    addition       → multiplication ( ( "-" | "+" ) multiplication )* ;
 //    multiplication → unary ( ( "/" | "*" ) unary )* ;
 //    unary          → ( "!" | "-" ) unary ;
 //                   | primary ;
-//    primary        → NUMBER | STRING | "false" | "true" | "nil"
-//                   | "(" expression ")" ;
+//    primary        → "false" | "true" | "nil"
+//                   | NUMBER | STRING
+//                   | "(" expression ")"
+//                   | IDENTIFIER ;
 public class Parser {
     private static class ParseError extends RuntimeException {
     }
@@ -59,7 +73,7 @@ public class Parser {
     List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
-            statements.add(statement());
+            statements.add(declaration());
         }
 
         return statements;
@@ -98,8 +112,32 @@ public class Parser {
     }
 
     // grammar
+    private Stmt declaration() {
+        try {
+            if (match(VAR)) return varDeclaration();
+
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
+    private Stmt varDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name, initializer);
+    }
+
     private Stmt statement() {
         if (match(PRINT)) return printStatement();
+        if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
     }
@@ -116,8 +154,37 @@ public class Parser {
         return new Stmt.Expression(expr);
     }
 
+    private List<Stmt> block() {
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE, "Expect '}' after block.");
+        return statements;
+    }
+
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable) expr).name;
+                return new Expr.Assign(name, value);
+            }
+
+            error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
     }
 
     private Expr equality() {
@@ -180,6 +247,10 @@ public class Parser {
 
         if (match(NUMBER, STRING)) {
             return new Expr.Literal(previous().literal);
+        }
+
+        if (match(IDENTIFIER)) {
+            return new Expr.Variable(previous());
         }
 
         if (match(LEFT_PAREN)) {

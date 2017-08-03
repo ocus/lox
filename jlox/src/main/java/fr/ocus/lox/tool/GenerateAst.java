@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,25 +23,38 @@ public class GenerateAst {
 
         // expressions
         defineAst(outputDir, "Expr", Arrays.asList(
+            "Assign   : Token name, Expr value",
             "Binary   : Expr left, Token operator, Expr right",
             "Grouping : Expr expression",
             "Literal  : Object value",
-            "Unary    : Token operator, Expr right"
+            "Unary    : Token operator, Expr right",
+            "Variable : Token name"
         ));
 
         // statements
-        defineAst(outputDir, "Stmt", Arrays.asList(
+        defineAst(outputDir, "Stmt", Collections.singletonList("java.util.List"), Arrays.asList(
+            "Block      : List<Stmt> statements",
             "Expression : Expr expression",
-            "Print      : Expr expression"
+            "Print      : Expr expression",
+            "Var        : Token name, Expr initializer"
         ));
     }
 
-    private static void defineAst(String outputDir, String baseName, List<String> types)
-        throws IOException {
+    private static void defineAst(String outputDir, String baseName, List<String> types) throws IOException {
+        defineAst(outputDir, baseName, null, types);
+    }
+
+    private static void defineAst(String outputDir, String baseName, List<String> imports, List<String> types) throws IOException {
         String path = outputDir + File.separator + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, "UTF-8");
 
         writer.println("package fr.ocus.lox.jlox;");
+        if (imports != null && !imports.isEmpty()) {
+            writer.println("");
+            for (String imp : imports) {
+                writer.println("import " + imp + ";");
+            }
+        }
         writer.println("");
         writer.println("/**");
         writer.println(" * @author Matthieu Honel <ocus51@gmail.com>");
