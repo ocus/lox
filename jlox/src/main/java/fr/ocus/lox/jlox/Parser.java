@@ -1,5 +1,6 @@
 package fr.ocus.lox.jlox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static fr.ocus.lox.jlox.TokenType.BANG;
@@ -16,6 +17,7 @@ import static fr.ocus.lox.jlox.TokenType.MINUS;
 import static fr.ocus.lox.jlox.TokenType.NIL;
 import static fr.ocus.lox.jlox.TokenType.NUMBER;
 import static fr.ocus.lox.jlox.TokenType.PLUS;
+import static fr.ocus.lox.jlox.TokenType.PRINT;
 import static fr.ocus.lox.jlox.TokenType.RIGHT_PAREN;
 import static fr.ocus.lox.jlox.TokenType.SEMICOLON;
 import static fr.ocus.lox.jlox.TokenType.SLASH;
@@ -28,7 +30,12 @@ import static fr.ocus.lox.jlox.TokenType.TRUE;
  * @since 2017-08-03
  */
 //
-// Binary rules:
+// Grammar:
+//    program        → statement* EOF ;
+//    statement      → exprStmt
+//                   | printStmt ;
+//    exprStmt       → expression ";" ;
+//    printStmt      → "print" expression ";" ;
 //    expression     → equality ;
 //    equality       → comparison ( ( "!=" | "==" ) comparison )* ;
 //    comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
@@ -49,12 +56,13 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    Expr parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+
+        return statements;
     }
 
     private boolean check(TokenType tokenType) {
@@ -87,6 +95,25 @@ public class Parser {
 
     private Token previous() {
         return tokens.get(current - 1);
+    }
+
+    // grammar
+    private Stmt statement() {
+        if (match(PRINT)) return printStatement();
+
+        return expressionStatement();
+    }
+
+    private Stmt printStatement() {
+        Expr value = expression();
+        consume(SEMICOLON, "Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
     }
 
     private Expr expression() {

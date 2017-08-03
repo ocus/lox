@@ -19,11 +19,19 @@ public class GenerateAst {
             System.exit(1);
         }
         String outputDir = args[0];
+
+        // expressions
         defineAst(outputDir, "Expr", Arrays.asList(
             "Binary   : Expr left, Token operator, Expr right",
             "Grouping : Expr expression",
             "Literal  : Object value",
             "Unary    : Token operator, Expr right"
+        ));
+
+        // statements
+        defineAst(outputDir, "Stmt", Arrays.asList(
+            "Expression : Expr expression",
+            "Print      : Expr expression"
         ));
     }
 
@@ -33,8 +41,6 @@ public class GenerateAst {
         PrintWriter writer = new PrintWriter(path, "UTF-8");
 
         writer.println("package fr.ocus.lox.jlox;");
-        writer.println("");
-        writer.println("import java.util.List;");
         writer.println("");
         writer.println("/**");
         writer.println(" * @author Matthieu Honel <ocus51@gmail.com>");
