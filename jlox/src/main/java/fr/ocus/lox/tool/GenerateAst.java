@@ -22,9 +22,10 @@ public class GenerateAst {
         String outputDir = args[0];
 
         // expressions
-        defineAst(outputDir, "Expr", Arrays.asList(
+        defineAst(outputDir, "Expr", Collections.singletonList("java.util.List"), Arrays.asList(
             "Assign   : Token name, Expr value",
             "Binary   : Expr left, Token operator, Expr right",
+            "Call     : Expr callee, Token paren, List<Expr> arguments",
             "Grouping : Expr expression",
             "Literal  : Object value",
             "Logical  : Expr left, Token operator, Expr right",
@@ -36,15 +37,13 @@ public class GenerateAst {
         defineAst(outputDir, "Stmt", Collections.singletonList("java.util.List"), Arrays.asList(
             "Block      : List<Stmt> statements",
             "Expression : Expr expression",
+            "Function   : Token name, List<Token> parameters, List<Stmt> body",
             "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
             "Print      : Expr expression",
             "Var        : Token name, Expr initializer",
+            "Return     : Token keyword, Expr value",
             "While      : Expr condition, Stmt body"
         ));
-    }
-
-    private static void defineAst(String outputDir, String baseName, List<String> types) throws IOException {
-        defineAst(outputDir, baseName, null, types);
     }
 
     private static void defineAst(String outputDir, String baseName, List<String> imports, List<String> types) throws IOException {

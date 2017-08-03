@@ -4,38 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static fr.ocus.lox.jlox.TokenType.AND;
-import static fr.ocus.lox.jlox.TokenType.BANG;
-import static fr.ocus.lox.jlox.TokenType.BANG_EQUAL;
-import static fr.ocus.lox.jlox.TokenType.ELSE;
-import static fr.ocus.lox.jlox.TokenType.EOF;
-import static fr.ocus.lox.jlox.TokenType.EQUAL;
-import static fr.ocus.lox.jlox.TokenType.EQUAL_EQUAL;
-import static fr.ocus.lox.jlox.TokenType.FALSE;
-import static fr.ocus.lox.jlox.TokenType.FOR;
-import static fr.ocus.lox.jlox.TokenType.GREATER;
-import static fr.ocus.lox.jlox.TokenType.GREATER_EQUAL;
-import static fr.ocus.lox.jlox.TokenType.IDENTIFIER;
-import static fr.ocus.lox.jlox.TokenType.IF;
-import static fr.ocus.lox.jlox.TokenType.LEFT_BRACE;
-import static fr.ocus.lox.jlox.TokenType.LEFT_PAREN;
-import static fr.ocus.lox.jlox.TokenType.LESS;
-import static fr.ocus.lox.jlox.TokenType.LESS_EQUAL;
-import static fr.ocus.lox.jlox.TokenType.MINUS;
-import static fr.ocus.lox.jlox.TokenType.NIL;
-import static fr.ocus.lox.jlox.TokenType.NUMBER;
-import static fr.ocus.lox.jlox.TokenType.OR;
-import static fr.ocus.lox.jlox.TokenType.PLUS;
-import static fr.ocus.lox.jlox.TokenType.PRINT;
-import static fr.ocus.lox.jlox.TokenType.RIGHT_BRACE;
-import static fr.ocus.lox.jlox.TokenType.RIGHT_PAREN;
-import static fr.ocus.lox.jlox.TokenType.SEMICOLON;
-import static fr.ocus.lox.jlox.TokenType.SLASH;
-import static fr.ocus.lox.jlox.TokenType.STAR;
-import static fr.ocus.lox.jlox.TokenType.STRING;
-import static fr.ocus.lox.jlox.TokenType.TRUE;
-import static fr.ocus.lox.jlox.TokenType.VAR;
-import static fr.ocus.lox.jlox.TokenType.WHILE;
+import static fr.ocus.lox.jlox.TokenType.*;
 
 /**
  * @author Matthieu Honel <ocus51@gmail.com>
@@ -45,17 +14,23 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  * <pre>
  * program        → declaration* EOF ;
  *
- * declaration    → varDecl
+ * declaration    → funDecl
+ *                | varDecl
  *                | statement ;
  *
  * statement      → exprStmt
  *                | forStmt
  *                | ifStmt
  *                | printStmt
+ *                | returnStmt
  *                | whileStmt
  *                | block ;
  *
+ * funDecl        → "fun" function ;
  * varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
+ *
+ * function       → IDENTIFIER "(" parameters? ")" block ;
+ * parameters     → IDENTIFIER ( "," IDENTIFIER )* ;
  *
  * exprStmt       → expression ";" ;
  * forStmt        → "for" "(" ( varDecl | exprStmt | ";" )
@@ -63,6 +38,7 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  *                            expression? ")" statement ;
  * ifStmt         → "if" "(" expression ")" statement ( "else" statement )? ;
  * printStmt      → "print" expression ";" ;
+ * returnStmt     → "return" expression? ";" ;
  * whileStmt      → "while" "(" expression ")" statement ;
  *
  * block          → "{" declaration* "}" ;
@@ -76,8 +52,9 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  * comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
  * addition       → multiplication ( ( "-" | "+" ) multiplication )* ;
  * multiplication → unary ( ( "/" | "*" ) unary )* ;
- * unary          → ( "!" | "-" ) unary ;
- *                | primary ;
+ * unary          → ( "!" | "-" ) unary | call ;
+ * call           → primary ( "(" arguments? ")" )* ;
+ * arguments      → expression ( "," expression )* ;
  * primary        → "false" | "true" | "nil"
  *                | NUMBER | STRING
  *                | "(" expression ")"
@@ -145,6 +122,7 @@ public class Parser {
     // grammar
     private Stmt declaration() {
         try {
+            if (match(FUN)) return function("function");
             if (match(VAR)) return varDeclaration();
 
             return statement();
@@ -152,6 +130,25 @@ public class Parser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt.Function function(String kind) {
+        Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
+        consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+        List<Token> parameters = new ArrayList<>();
+        if (!check(RIGHT_PAREN)) {
+            do {
+                if (parameters.size() >= 8) {
+                    error(peek(), "Cannot have more than 8 parameters.");
+                }
+
+                parameters.add(consume(IDENTIFIER, "Expect parameter name."));
+            } while (match(COMMA));
+        }
+        consume(RIGHT_PAREN, "Expect ')' after parameters.");
+        consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
+        List<Stmt> body = block();
+        return new Stmt.Function(name, parameters, body);
     }
 
     private Stmt varDeclaration() {
@@ -170,6 +167,7 @@ public class Parser {
         if (match(FOR)) return forStatement();
         if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
+        if (match(RETURN)) return returnStatement();
         if (match(WHILE)) return whileStatement();
         if (match(LEFT_BRACE)) return new Stmt.Block(block());
 
@@ -233,6 +231,17 @@ public class Parser {
         Expr value = expression();
         consume(SEMICOLON, "Expect ';' after value.");
         return new Stmt.Print(value);
+    }
+
+    private Stmt returnStatement() {
+        Token keyword = previous();
+        Expr value = null;
+        if (!check(SEMICOLON)) {
+            value = expression();
+        }
+
+        consume(SEMICOLON, "Expect ';' after return value.");
+        return new Stmt.Return(keyword, value);
     }
 
     private Stmt whileStatement() {
@@ -357,7 +366,37 @@ public class Parser {
             return new Expr.Unary(operator, right);
         }
 
-        return primary();
+        return call();
+    }
+
+    private Expr call() {
+        Expr expr = primary();
+
+        while (true) {
+            if (match(LEFT_PAREN)) {
+                expr = finishCall(expr);
+            } else {
+                break;
+            }
+        }
+
+        return expr;
+    }
+
+    private Expr finishCall(Expr callee) {
+        List<Expr> arguments = new ArrayList<>();
+        if (!check(RIGHT_PAREN)) {
+            do {
+                if (arguments.size() >= 8) {
+                    error(peek(), "Cannot have more than 8 arguments.");
+                }
+                arguments.add(expression());
+            } while (match(COMMA));
+        }
+
+        Token paren = consume(RIGHT_PAREN, "Expect ')' after arguments.");
+
+        return new Expr.Call(callee, paren, arguments);
     }
 
     private Expr primary() {
