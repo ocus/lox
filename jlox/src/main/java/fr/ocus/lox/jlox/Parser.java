@@ -1,5 +1,6 @@
 package fr.ocus.lox.jlox;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -105,10 +106,12 @@ public class Parser {
     private static class ParseError extends RuntimeException {
     }
 
+    private final PrintStream errorStream;
     private final List<Token> tokens;
     private int current = 0;
 
-    Parser(List<Token> tokens) {
+    Parser(PrintStream errorStream, List<Token> tokens) {
+        this.errorStream = errorStream;
         this.tokens = tokens;
     }
 
@@ -486,7 +489,7 @@ public class Parser {
     }
 
     private ParseError error(Token token, String message) {
-        JLox.error(token, message);
+        JLox.error(errorStream, token, message);
         return new ParseError();
     }
 }

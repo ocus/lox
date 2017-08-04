@@ -1,8 +1,13 @@
 package fr.ocus.lox.jlox;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,7 +18,6 @@ import java.util.List;
  * @since 2017-08-03
  */
 public class JLox {
-    private static final Interpreter interpreter = new Interpreter();
     private static boolean hadError;
     private static boolean hadRuntimeError;
 
@@ -29,7 +33,7 @@ public class JLox {
 
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
-        run(new String(bytes, Charset.defaultCharset()));
+        run(System.err, new Interpreter(System.out, System.err), new String(bytes, Charset.defaultCharset()));
 
         if (hadError) System.exit(65);
         if (hadRuntimeError) System.exit(70);
@@ -39,18 +43,19 @@ public class JLox {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
+        Interpreter interpreter = new Interpreter(System.out, System.err);
         while (true) {
             System.out.println("> ");
-            run(reader.readLine());
-            hadError = false;
+            run(System.err, interpreter, reader.readLine());
         }
     }
 
-    private static void run(String source) {
-        Scanner scanner = new Scanner(source);
+    public static void run(PrintStream errorStream, Interpreter interpreter, String source) {
+        hadError = false;
+        Scanner scanner = new Scanner(errorStream, source);
         List<Token> tokens = scanner.scanTokens();
 
-        Parser parser = new Parser(tokens);
+        Parser parser = new Parser(errorStream, tokens);
         List<Stmt> statements = parser.parse();
 
         // Stop if there was a syntax error.
@@ -60,25 +65,25 @@ public class JLox {
 //        System.out.println(new AstPrinter().print(expression));
     }
 
-    static void error(int line, String message) {
-        report(line, "", message);
+    static void error(PrintStream errorStream, int line, String message) {
+        report(errorStream, line, "", message);
     }
 
-    private static void report(int line, String where, String message) {
-        System.err.println("[Line " + line + "] Error" + where + ": " + message);
+    private static void report(PrintStream errorStream, int line, String where, String message) {
+        errorStream.println("[Line " + line + "] Error" + where + ": " + message);
         hadError = true;
     }
 
-    static void error(Token token, String message) {
+    static void error(PrintStream errorStream, Token token, String message) {
         if (token.type == TokenType.EOF) {
-            report(token.line, " at end", message);
+            report(errorStream, token.line, " at end", message);
         } else {
-            report(token.line, " at '" + token.lexeme + "'", message);
+            report(errorStream, token.line, " at '" + token.lexeme + "'", message);
         }
     }
 
-    static void runtimeError(RuntimeError error) {
-        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+    static void runtimeError(PrintStream errorStream, RuntimeError error) {
+        errorStream.println(error.getMessage() + "\n[line " + error.token.line + "]");
         hadRuntimeError = true;
     }
 }

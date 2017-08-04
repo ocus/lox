@@ -1,5 +1,6 @@
 package fr.ocus.lox.jlox;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,16 @@ import java.util.List;
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     private Environment environment = globals;
+    private final PrintStream printStream;
+    private final PrintStream errorStream;
 
     Interpreter() {
+        this(System.out, System.err);
+    }
+
+    Interpreter(PrintStream printStream, PrintStream errorStream) {
+        this.printStream = printStream;
+        this.errorStream = errorStream;
         globals.define("clock", new LoxCallable() {
             @Override
             public int arity() {
@@ -31,7 +40,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 execute(statement);
             }
         } catch (RuntimeError error) {
-            JLox.runtimeError(error);
+            JLox.runtimeError(errorStream, error);
         }
     }
 
@@ -189,7 +198,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
-        System.out.println(stringify(value));
+        printStream.println(stringify(value));
         return null;
     }
 

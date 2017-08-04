@@ -1,5 +1,6 @@
 package fr.ocus.lox.jlox;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,7 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  * @since 2017-08-03
  */
 class Scanner {
+    private final PrintStream errorStream;
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
 
@@ -57,7 +59,8 @@ class Scanner {
     private int current = 0;
     private int line = 1;
 
-    Scanner(String source) {
+    Scanner(PrintStream errorStream, String source) {
+        this.errorStream = errorStream;
         this.source = source;
     }
 
@@ -115,7 +118,7 @@ class Scanner {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    JLox.error(line, "Unexpected character.");
+                    JLox.error(errorStream, line, "Unexpected character.");
                 }
                 break;
         }
@@ -161,7 +164,7 @@ class Scanner {
             advance();
         }
         if (isAtEnd()) {
-            JLox.error(line, "Unterminated string.");
+            JLox.error(errorStream, line, "Unterminated string.");
             return;
         }
         advance(); // closing "
