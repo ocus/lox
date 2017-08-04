@@ -33,7 +33,7 @@ public class GenerateInterpreterTests {
     static {
         DISABLED_DIRECTORIES.add("benchmark");
         DISABLED_DIRECTORIES.add("class");
-        DISABLED_DIRECTORIES.add("closure");
+//        DISABLED_DIRECTORIES.add("closure");
         DISABLED_DIRECTORIES.add("constructor");
         DISABLED_DIRECTORIES.add("expressions");
         DISABLED_DIRECTORIES.add("field");
@@ -91,63 +91,6 @@ public class GenerateInterpreterTests {
         for (String group : groupedPaths.keySet()) {
             generateTest(outputDir, baseDir, groupedPaths.get(group), group);
         }
-
-//        Path outputFile = Paths.get(outputDir, "SInterpreterTest.java");
-//        PrintWriter writer = new PrintWriter(outputFile.toAbsolutePath().toString(), "UTF-8");
-//
-//        writer.println("package fr.ocus.lox.jlox;");
-//        writer.println("");
-//        writer.println("import org.junit.Ignore;");
-//        writer.println("import org.junit.Test;");
-//        writer.println("");
-//        writer.println("import java.util.Arrays;");
-//        writer.println("");
-//        writer.println("import static org.junit.Assert.assertArrayEquals;");
-//        writer.println("import static org.junit.Assert.assertEquals;");
-//        writer.println("");
-//        writer.println("/**");
-//        writer.println(" * @author Matthieu Honel <ocus51@gmail.com>");
-//        writer.println(" * @since 2017-08-04");
-//        writer.println(" */");
-//        writer.println("public class InterpreterTest {");
-//
-//        for (Path file : files) {
-//            Path relative = baseDir.relativize(file);
-//            Path fileName = relative.getFileName();
-//            String baseName = fileName.toString().replaceAll(".lox", "");
-//            Path type = relative.getParent();
-//            String underscoreName = (type != null ? type + "_" : "") + baseName;
-//            String camelName = toCamelCase(underscoreName);
-//            String testName = "test" + camelName;
-//
-//            writer.println("");
-//            writer.println("    @Test");
-//            if (type != null && DISABLED_DIRECTORIES.contains(type.toString())) {
-//                writer.println("    @Ignore");
-//            }
-//            writer.println("    public void " + testName + "() {");
-//            writer.println("        InterpreterTestHelper helper = new InterpreterTestHelper(\"" + file + "\");");
-//            writer.println("        helper.run();");
-//            writer.println("        String[] out = helper.getOutput();");
-//            writer.println("        String[] err = helper.getError();");
-//            writer.println("        System.err.println(Arrays.toString(err));");
-//            List<String> lines = Files.readAllLines(file);
-//            int outputExpectIndex = 0;
-//            for (String line : lines) {
-//                Matcher m = OUTPUT_EXPECT.matcher(line);
-//                if (m.find()) {
-//                    writer.println("        assertEquals(\"" + m.group(1).replaceAll("\"", "\\\\\"") + "\", out[" + outputExpectIndex + "]);");
-//                    outputExpectIndex++;
-//                }
-//            }
-//            if (outputExpectIndex == 0) {
-//                writer.println("        assertArrayEquals(new String[] {\"\"}, out);");
-//            }
-//            writer.println("        assertArrayEquals(new String[] {\"\"}, err);");
-//            writer.println("    }");
-//        }
-//        writer.println("}");
-//        writer.close();
     }
 
     private static void generateTest(String outputDir, Path baseDir, List<Path> files, String groupName) throws IOException {

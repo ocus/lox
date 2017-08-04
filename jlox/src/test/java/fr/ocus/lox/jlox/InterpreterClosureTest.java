@@ -1,6 +1,5 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-    @Ignore
 public class InterpreterClosureTest {
 
     @Test
