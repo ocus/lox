@@ -4,7 +4,41 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static fr.ocus.lox.jlox.TokenType.*;
+import static fr.ocus.lox.jlox.TokenType.AND;
+import static fr.ocus.lox.jlox.TokenType.BANG;
+import static fr.ocus.lox.jlox.TokenType.BANG_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.COMMA;
+import static fr.ocus.lox.jlox.TokenType.ELSE;
+import static fr.ocus.lox.jlox.TokenType.EOF;
+import static fr.ocus.lox.jlox.TokenType.EQUAL;
+import static fr.ocus.lox.jlox.TokenType.EQUAL_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.FALSE;
+import static fr.ocus.lox.jlox.TokenType.FOR;
+import static fr.ocus.lox.jlox.TokenType.FUN;
+import static fr.ocus.lox.jlox.TokenType.GREATER;
+import static fr.ocus.lox.jlox.TokenType.GREATER_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.IDENTIFIER;
+import static fr.ocus.lox.jlox.TokenType.IF;
+import static fr.ocus.lox.jlox.TokenType.LEFT_BRACE;
+import static fr.ocus.lox.jlox.TokenType.LEFT_PAREN;
+import static fr.ocus.lox.jlox.TokenType.LESS;
+import static fr.ocus.lox.jlox.TokenType.LESS_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.MINUS;
+import static fr.ocus.lox.jlox.TokenType.NIL;
+import static fr.ocus.lox.jlox.TokenType.NUMBER;
+import static fr.ocus.lox.jlox.TokenType.OR;
+import static fr.ocus.lox.jlox.TokenType.PLUS;
+import static fr.ocus.lox.jlox.TokenType.PRINT;
+import static fr.ocus.lox.jlox.TokenType.RETURN;
+import static fr.ocus.lox.jlox.TokenType.RIGHT_BRACE;
+import static fr.ocus.lox.jlox.TokenType.RIGHT_PAREN;
+import static fr.ocus.lox.jlox.TokenType.SEMICOLON;
+import static fr.ocus.lox.jlox.TokenType.SLASH;
+import static fr.ocus.lox.jlox.TokenType.STAR;
+import static fr.ocus.lox.jlox.TokenType.STRING;
+import static fr.ocus.lox.jlox.TokenType.TRUE;
+import static fr.ocus.lox.jlox.TokenType.VAR;
+import static fr.ocus.lox.jlox.TokenType.WHILE;
 
 /**
  * @author Matthieu Honel <ocus51@gmail.com>
