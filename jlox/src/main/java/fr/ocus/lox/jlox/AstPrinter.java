@@ -7,7 +7,11 @@ import java.util.ArrayList;
  * @since 2017-08-03
  */
 // Creates an unambiguous, if ugly, string representation of AST nodes.
-public class AstPrinter implements Expr.Visitor<String> {
+public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
+    String print(Stmt stmt) {
+        return stmt.accept(this);
+    }
+
     String print(Expr expr) {
         return expr.accept(this);
     }
@@ -51,6 +55,46 @@ public class AstPrinter implements Expr.Visitor<String> {
     @Override
     public String visitVariableExpr(Expr.Variable expr) {
         return "$" + expr.name.lexeme;
+    }
+
+    @Override
+    public String visitBlockStmt(Stmt.Block stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitExpressionStmt(Stmt.Expression stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitFunctionStmt(Stmt.Function stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitIfStmt(Stmt.If stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitPrintStmt(Stmt.Print stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitVarStmt(Stmt.Var stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitReturnStmt(Stmt.Return stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitWhileStmt(Stmt.While stmt) {
+        return null;
     }
 
     private String parenthesize(String name, Expr... exprs) {
@@ -104,4 +148,5 @@ public class AstPrinter implements Expr.Visitor<String> {
         );
         System.out.println(new AstPrinter().print(expression));
     }
+
 }
