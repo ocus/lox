@@ -113,7 +113,7 @@ public class GenerateInterpreterTests {
         writer.println(" * @since 2017-08-04");
         writer.println(" */");
         if (DISABLED_DIRECTORIES.contains(groupName)) {
-            writer.println("    @Ignore");
+            writer.println("@Ignore");
         }
         writer.println("public class Interpreter" + camelCaseGroupName + "Test {");
 
