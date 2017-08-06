@@ -10,8 +10,10 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,7 +77,7 @@ public class GenerateInterpreterTests {
     }
 
     private static void generateTests(String outputDir, Path baseDir, List<Path> files) throws IOException {
-        HashMap<String, ArrayList<Path>> groupedPaths = new HashMap<String, ArrayList<Path>>();
+        Map<String, ArrayList<Path>> groupedPaths = new HashMap<>();
         for (Path file : files) {
             Path relative = baseDir.relativize(file);
             Path fileName = relative.getFileName();
@@ -89,7 +91,9 @@ public class GenerateInterpreterTests {
         }
 
         for (String group : groupedPaths.keySet()) {
-            generateTest(outputDir, baseDir, groupedPaths.get(group), group);
+            List<Path> groupFiles = groupedPaths.get(group);
+            Collections.sort(groupFiles);
+            generateTest(outputDir, baseDir, groupFiles, group);
         }
     }
 
