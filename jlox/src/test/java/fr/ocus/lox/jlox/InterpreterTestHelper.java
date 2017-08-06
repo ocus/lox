@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * @author Matthieu Honel <ocus51@gmail.com>
@@ -16,14 +16,14 @@ class InterpreterTestHelper {
     private final ByteArrayOutputStream errBaos = new ByteArrayOutputStream();
     private final PrintStream out = new PrintStream(outBaos);
     private final PrintStream err = new PrintStream(errBaos);
-    private final String sourceFile;
+    private final Path sourceFile;
     private final byte[] source;
 
-    InterpreterTestHelper(String sourceFile) {
+    InterpreterTestHelper(Path sourceFile) {
         this.sourceFile = sourceFile;
         byte[] bytes = new byte[0];
         try {
-            bytes = Files.readAllBytes(Paths.get(this.sourceFile));
+            bytes = Files.readAllBytes(this.sourceFile);
         } catch (IOException e) {
             e.printStackTrace();
         }

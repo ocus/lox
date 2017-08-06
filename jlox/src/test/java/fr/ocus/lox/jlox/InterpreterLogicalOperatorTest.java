@@ -1,8 +1,8 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -16,11 +16,12 @@ public class InterpreterLogicalOperatorTest {
 
     @Test
     public void testAnd() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/logical_operator/and.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "logical_operator", "and.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("false", out[0]);
         assertEquals("1", out[1]);
         assertEquals("false", out[2]);
@@ -32,12 +33,29 @@ public class InterpreterLogicalOperatorTest {
     }
 
     @Test
-    public void testOr() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/logical_operator/or.lox");
+    public void testAndTruth() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "logical_operator", "and_truth.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertEquals("false", out[0]);
+        assertEquals("nil", out[1]);
+        assertEquals("ok", out[2]);
+        assertEquals("ok", out[3]);
+        assertEquals("ok", out[4]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testOr() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "logical_operator", "or.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("1", out[0]);
         assertEquals("1", out[1]);
         assertEquals("true", out[2]);
@@ -49,27 +67,13 @@ public class InterpreterLogicalOperatorTest {
     }
 
     @Test
-    public void testAndTruth() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/logical_operator/and_truth.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertEquals("false", out[0]);
-        assertEquals("nil", out[1]);
-        assertEquals("ok", out[2]);
-        assertEquals("ok", out[3]);
-        assertEquals("ok", out[4]);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
     public void testOrTruth() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/logical_operator/or_truth.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "logical_operator", "or_truth.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("ok", out[0]);
         assertEquals("ok", out[1]);
         assertEquals("true", out[2]);

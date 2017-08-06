@@ -209,7 +209,7 @@ public class SourceAstPrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
     }
 
     static public void main(String[] args) {
-        String[] programs = new String[] {
+        String[] programs = new String[]{
             "programs/scope.lox",
             "programs/fibonacci.lox",
             "src/test/resources/programs/closure/assign_to_closure.lox",

@@ -98,11 +98,15 @@ public class GenerateInterpreterTests {
         Path outputFile = Paths.get(outputDir, "Interpreter" + camelCaseGroupName + "Test.java");
         PrintWriter writer = new PrintWriter(outputFile.toAbsolutePath().toString(), "UTF-8");
 
+        boolean ignored = DISABLED_DIRECTORIES.contains(groupName);
         writer.println("package fr.ocus.lox.jlox;");
         writer.println("");
-        writer.println("import org.junit.Ignore;");
+        if (ignored) {
+            writer.println("import org.junit.Ignore;");
+        }
         writer.println("import org.junit.Test;");
         writer.println("");
+        writer.println("import java.nio.file.Paths;");
         writer.println("import java.util.Arrays;");
         writer.println("");
         writer.println("import static org.junit.Assert.assertArrayEquals;");
@@ -112,7 +116,7 @@ public class GenerateInterpreterTests {
         writer.println(" * @author Matthieu Honel <ocus51@gmail.com>");
         writer.println(" * @since 2017-08-04");
         writer.println(" */");
-        if (DISABLED_DIRECTORIES.contains(groupName)) {
+        if (ignored) {
             writer.println("@Ignore");
         }
         writer.println("public class Interpreter" + camelCaseGroupName + "Test {");
@@ -128,11 +132,12 @@ public class GenerateInterpreterTests {
             writer.println("");
             writer.println("    @Test");
             writer.println("    public void " + testName + "() {");
-            writer.println("        InterpreterTestHelper helper = new InterpreterTestHelper(\"" + file + "\");");
+            writer.println("        InterpreterTestHelper helper = new InterpreterTestHelper(" + toPathsGetString(file) + ");");
             writer.println("        helper.run();");
             writer.println("        String[] out = helper.getOutput();");
             writer.println("        String[] err = helper.getError();");
-            writer.println("        System.err.println(Arrays.toString(err));");
+            writer.println("        System.err.println(\"OUT: \" + Arrays.toString(out));");
+            writer.println("        System.err.println(\"ERR: \" + Arrays.toString(err));");
             List<String> lines = Files.readAllLines(file);
             int outputExpectIndex = 0;
             for (String line : lines) {
@@ -164,5 +169,16 @@ public class GenerateInterpreterTests {
     static String toProperCase(String s) {
         return s.substring(0, 1).toUpperCase() +
             s.substring(1).toLowerCase();
+    }
+
+    static String toPathsGetString(Path path) {
+        String arguments = "";
+        for (int i = 0; i < path.getNameCount(); i++) {
+            arguments += "\"" + path.getName(i) + "\"";
+            if (i < path.getNameCount() - 1) {
+                arguments += ", ";
+            }
+        }
+        return "Paths.get(" + arguments + ")";
     }
 }

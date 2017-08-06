@@ -2,6 +2,7 @@ package fr.ocus.lox.jlox;
 
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -15,18 +16,18 @@ public class JLoxTest {
 
     @Test
     public void testInterpreter() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/precedence.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "precedence.lox"));
         helper.run();
 
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        assertArrayEquals(new String[] {""}, err);
+        assertArrayEquals(new String[]{""}, err);
 
         assertEquals("14", out[0]);
         assertEquals("8", out[1]);
         assertEquals("4", out[2]);
         assertEquals("0", out[3]);
         System.out.print(out);
-        System.err.print("//"+ Arrays.toString(err)+"//");
+        System.err.print("//" + Arrays.toString(err) + "//");
     }
 }

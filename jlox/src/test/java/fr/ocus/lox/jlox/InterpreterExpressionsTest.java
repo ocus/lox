@@ -3,6 +3,7 @@ package fr.ocus.lox.jlox;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -17,22 +18,24 @@ public class InterpreterExpressionsTest {
 
     @Test
     public void testEvaluate() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/expressions/evaluate.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "expressions", "evaluate.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("2", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testParse() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/expressions/parse.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "expressions", "parse.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("(+ (group (- 5.0 (group (- 3.0 1.0)))) (- 1.0))", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

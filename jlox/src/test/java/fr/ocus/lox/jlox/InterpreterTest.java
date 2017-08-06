@@ -1,8 +1,8 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -16,22 +16,24 @@ public class InterpreterTest {
 
     @Test
     public void testEmptyFile() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/empty_file.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "empty_file.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testPrecedence() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/precedence.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "precedence.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("14", out[0]);
         assertEquals("8", out[1]);
         assertEquals("4", out[2]);
@@ -50,11 +52,12 @@ public class InterpreterTest {
 
     @Test
     public void testUnexpectedCharacter() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/unexpected_character.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "unexpected_character.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }

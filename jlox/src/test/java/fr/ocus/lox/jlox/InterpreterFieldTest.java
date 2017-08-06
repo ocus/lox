@@ -3,6 +3,7 @@ package fr.ocus.lox.jlox;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -16,24 +17,109 @@ import static org.junit.Assert.assertEquals;
 public class InterpreterFieldTest {
 
     @Test
-    public void testMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/method.lox");
+    public void testCallFunctionField() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "call_function_field.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertEquals("got method", out[0]);
-        assertEquals("arg", out[1]);
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertEquals("bar", out[0]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testCallNonfunctionField() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "call_nonfunction_field.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testGetOnBool() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "get_on_bool.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testGetOnClass() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "get_on_class.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testGetOnFunction() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "get_on_function.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testGetOnNil() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "get_on_nil.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testGetOnNum() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "get_on_num.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testGetOnString() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "get_on_string.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testMany() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/many.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "many.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("apple", out[0]);
         assertEquals("apricot", out[1]);
         assertEquals("avocado", out[2]);
@@ -117,192 +203,126 @@ public class InterpreterFieldTest {
     }
 
     @Test
-    public void testGetOnNil() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/get_on_nil.lox");
+    public void testMethod() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "method.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertEquals("got method", out[0]);
+        assertEquals("arg", out[1]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testMethodBindsThis() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "method_binds_this.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertEquals("foo1", out[0]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testOnInstance() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "on_instance.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertEquals("bar value", out[0]);
+        assertEquals("baz value", out[1]);
+        assertEquals("bar value", out[2]);
+        assertEquals("baz value", out[3]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testSetOnBool() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/set_on_bool.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "set_on_bool.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testCallNonfunctionField() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/call_nonfunction_field.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testGetOnString() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/get_on_string.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testSetOnString() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/set_on_string.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testUndefined() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/undefined.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testSetOnNil() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/set_on_nil.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testSetOnClass() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/set_on_class.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "set_on_class.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testSetOnFunction() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "set_on_function.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
+        assertArrayEquals(new String[]{""}, out);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testSetOnNil() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "set_on_nil.lox"));
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testSetOnNum() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/set_on_num.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "set_on_num.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
-    public void testGetOnNum() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/get_on_num.lox");
+    public void testSetOnString() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "set_on_string.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
-    public void testCallFunctionField() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/call_function_field.lox");
+    public void testUndefined() {
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "field", "undefined.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertEquals("bar", out[0]);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testGetOnBool() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/get_on_bool.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testGetOnClass() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/get_on_class.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testGetOnFunction() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/get_on_function.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testMethodBindsThis() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/method_binds_this.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertEquals("foo1", out[0]);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testSetOnFunction() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/set_on_function.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testOnInstance() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/field/on_instance.lox");
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
-        assertEquals("bar value", out[0]);
-        assertEquals("baz value", out[1]);
-        assertEquals("bar value", out[2]);
-        assertEquals("baz value", out[3]);
         assertArrayEquals(new String[]{""}, err);
     }
 }

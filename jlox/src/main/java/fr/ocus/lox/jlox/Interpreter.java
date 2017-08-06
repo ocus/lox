@@ -198,7 +198,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
-        printStream.println(stringify(value));
+        printStream.print(stringify(value) + "\n"); // platform-independent newline
         return null;
     }
 

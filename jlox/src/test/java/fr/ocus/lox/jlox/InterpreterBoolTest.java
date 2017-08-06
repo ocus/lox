@@ -1,8 +1,8 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -16,11 +16,12 @@ public class InterpreterBoolTest {
 
     @Test
     public void testEquality() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/bool/equality.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "bool", "equality.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("true", out[0]);
         assertEquals("false", out[1]);
         assertEquals("false", out[2]);
@@ -44,11 +45,12 @@ public class InterpreterBoolTest {
 
     @Test
     public void testNot() {
-        InterpreterTestHelper helper = new InterpreterTestHelper("src/test/resources/programs/bool/not.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "bool", "not.lox"));
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(Arrays.toString(err));
+        System.err.println("OUT: " + Arrays.toString(out));
+        System.err.println("ERR: " + Arrays.toString(err));
         assertEquals("false", out[0]);
         assertEquals("true", out[1]);
         assertEquals("true", out[2]);
