@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-public class SourceAstPrinter implements Stmt.Visitor<String>, Expr.Visitor<String> {
+public class AstSourcePrinter implements Stmt.Visitor<String>, Expr.Visitor<String> {
     List<String> print(List<Stmt> stmts) {
         List<String> prints = new ArrayList<>(stmts.size());
         for (Stmt stmt : stmts) {
@@ -199,7 +199,7 @@ public class SourceAstPrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
 
             Parser parser = new Parser(System.err, tokens);
             List<Stmt> statements = parser.parse();
-            SourceAstPrinter printer = new SourceAstPrinter();
+            AstSourcePrinter printer = new AstSourcePrinter();
             return Arrays.stream(printer.print(statements).toArray(new String[0]))
                 .collect(Collectors.joining(""));
         } catch (IOException e) {
