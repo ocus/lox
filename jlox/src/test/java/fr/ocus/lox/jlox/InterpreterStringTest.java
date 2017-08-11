@@ -2,9 +2,12 @@ package fr.ocus.lox.jlox;
 
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -16,24 +19,28 @@ public class InterpreterStringTest {
 
     @Test
     public void testErrorAfterMultiline() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "string", "error_after_multiline.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "string", "error_after_multiline.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Undefined variable 'err'."));
+        assertThat(err[1], containsString("[line 7]"));
     }
 
     @Test
     public void testLiterals() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "string", "literals.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "string", "literals.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("()", out[0]);
         assertEquals("a string", out[1]);
         assertEquals("A~¶Þॐஃ", out[2]);
@@ -42,12 +49,13 @@ public class InterpreterStringTest {
 
     @Test
     public void testMultiline() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "string", "multiline.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "string", "multiline.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("1", out[0]);
         assertEquals("2", out[1]);
         assertEquals("3", out[2]);
@@ -56,13 +64,15 @@ public class InterpreterStringTest {
 
     @Test
     public void testUnterminated() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "string", "unterminated.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "string", "unterminated.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error: Unterminated string."));
     }
 }

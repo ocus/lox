@@ -1,11 +1,13 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -13,29 +15,30 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-@Ignore
 public class InterpreterSuperTest {
 
     @Test
     public void testBoundMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "bound_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "bound_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("A.method(arg)", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testCallOtherMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "call_other_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "call_other_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Derived.bar()", out[0]);
         assertEquals("Base.foo()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -43,12 +46,13 @@ public class InterpreterSuperTest {
 
     @Test
     public void testCallSameMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "call_same_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "call_same_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Derived.foo()", out[0]);
         assertEquals("Base.foo()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -56,24 +60,26 @@ public class InterpreterSuperTest {
 
     @Test
     public void testClosure() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "closure.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "closure.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Base", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testConstructor() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "constructor.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "constructor.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Derived.init()", out[0]);
         assertEquals("Base.init(a, b)", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -81,24 +87,28 @@ public class InterpreterSuperTest {
 
     @Test
     public void testExtraArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "extra_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "extra_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Derived.foo()", out[0]);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 2 arguments but got 4."));
+        assertThat(err[1], containsString("[line 10]"));
     }
 
     @Test
     public void testIndirectlyInherited() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "indirectly_inherited.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "indirectly_inherited.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("C.foo()", out[0]);
         assertEquals("A.foo()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -106,72 +116,85 @@ public class InterpreterSuperTest {
 
     @Test
     public void testMissingArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "missing_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "missing_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 2 arguments but got 1."));
+        assertThat(err[1], containsString("[line 9]"));
     }
 
     @Test
     public void testNoSuperclassBind() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "no_superclass_bind.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "no_superclass_bind.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'super': Cannot use 'super' in a class with no superclass."));
     }
 
     @Test
     public void testNoSuperclassCall() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "no_superclass_call.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "no_superclass_call.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'super': Cannot use 'super' in a class with no superclass."));
     }
 
     @Test
     public void testNoSuperclassMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "no_superclass_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "no_superclass_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Undefined property 'doesNotExist'."));
+        assertThat(err[1], containsString("[line 5]"));
     }
 
     @Test
     public void testParenthesized() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "parenthesized.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "parenthesized.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at ')': Expect '.' after 'super'."));
     }
 
     @Test
     public void testReassignSuperclass() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "reassign_superclass.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "reassign_superclass.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Base.method()", out[0]);
         assertEquals("Base.method()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -179,84 +202,96 @@ public class InterpreterSuperTest {
 
     @Test
     public void testSuperAtTopLevel() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "super_at_top_level.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "super_at_top_level.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Error at 'super': Cannot use 'super' outside of a class."));
+        assertThat(err[1], containsString("Error at 'super': Cannot use 'super' outside of a class."));
     }
 
     @Test
     public void testSuperInClosureInInheritedMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "super_in_closure_in_inherited_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "super_in_closure_in_inherited_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("A", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testSuperInInheritedMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "super_in_inherited_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "super_in_inherited_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("A", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testSuperInTopLevelFunction() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "super_in_top_level_function.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "super_in_top_level_function.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'super': Cannot use 'super' outside of a class."));
     }
 
     @Test
     public void testSuperWithoutDot() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "super_without_dot.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "super_without_dot.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at ';': Expect '.' after 'super'."));
     }
 
     @Test
     public void testSuperWithoutName() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "super_without_name.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "super_without_name.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at ';': Expect superclass method name."));
     }
 
     @Test
     public void testThisInSuperclassMethod() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "super", "this_in_superclass_method.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "super", "this_in_superclass_method.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("a", out[0]);
         assertEquals("b", out[1]);
         assertArrayEquals(new String[]{""}, err);

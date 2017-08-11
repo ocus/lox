@@ -2,9 +2,12 @@ package fr.ocus.lox.jlox;
 
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -16,24 +19,27 @@ public class InterpreterForTest {
 
     @Test
     public void testClassInBody() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "class_in_body.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "class_in_body.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'class': Expect expression."));
     }
 
     @Test
     public void testClosureInBody() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "closure_in_body.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "closure_in_body.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("1", out[0]);
         assertEquals("2", out[1]);
         assertEquals("3", out[2]);
@@ -42,48 +48,53 @@ public class InterpreterForTest {
 
     @Test
     public void testFunInBody() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "fun_in_body.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "fun_in_body.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'fun': Expect expression."));
     }
 
     @Test
     public void testReturnClosure() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "return_closure.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "return_closure.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("i", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testReturnInside() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "return_inside.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "return_inside.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("i", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testScope() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "scope.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "scope.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("0", out[0]);
         assertEquals("-1", out[1]);
         assertEquals("after", out[2]);
@@ -93,48 +104,57 @@ public class InterpreterForTest {
 
     @Test
     public void testStatementCondition() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "statement_condition.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "statement_condition.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Error at '{': Expect expression."));
+        assertThat(err[1], containsString("Error at ')': Expect ';' after expression."));
     }
 
     @Test
     public void testStatementIncrement() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "statement_increment.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "statement_increment.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at '{': Expect expression."));
     }
 
     @Test
     public void testStatementInitializer() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "statement_initializer.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "statement_initializer.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Error at '{': Expect expression."));
+        assertThat(err[1], containsString("Error at ')': Expect ';' after expression."));
     }
 
     @Test
     public void testSyntax() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "syntax.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "syntax.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("1", out[0]);
         assertEquals("2", out[1]);
         assertEquals("3", out[2]);
@@ -154,13 +174,15 @@ public class InterpreterForTest {
 
     @Test
     public void testVarInBody() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "for", "var_in_body.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "for", "var_in_body.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'var': Expect expression."));
     }
 }

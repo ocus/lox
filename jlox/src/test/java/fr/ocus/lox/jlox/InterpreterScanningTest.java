@@ -3,9 +3,12 @@ package fr.ocus.lox.jlox;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -18,12 +21,13 @@ public class InterpreterScanningTest {
 
     @Test
     public void testIdentifiers() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "scanning", "identifiers.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "scanning", "identifiers.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("IDENTIFIER andy null", out[0]);
         assertEquals("IDENTIFIER formless null", out[1]);
         assertEquals("IDENTIFIER fo null", out[2]);
@@ -38,12 +42,13 @@ public class InterpreterScanningTest {
 
     @Test
     public void testKeywords() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "scanning", "keywords.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "scanning", "keywords.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("AND and null", out[0]);
         assertEquals("CLASS class null", out[1]);
         assertEquals("ELSE else null", out[2]);
@@ -65,12 +70,13 @@ public class InterpreterScanningTest {
 
     @Test
     public void testNumbers() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "scanning", "numbers.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "scanning", "numbers.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("NUMBER 123 123.0", out[0]);
         assertEquals("NUMBER 123.456 123.456", out[1]);
         assertEquals("DOT . null", out[2]);
@@ -83,12 +89,13 @@ public class InterpreterScanningTest {
 
     @Test
     public void testPunctuators() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "scanning", "punctuators.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "scanning", "punctuators.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("LEFT_PAREN ( null", out[0]);
         assertEquals("RIGHT_PAREN ) null", out[1]);
         assertEquals("LEFT_BRACE { null", out[2]);
@@ -113,12 +120,13 @@ public class InterpreterScanningTest {
 
     @Test
     public void testStrings() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "scanning", "strings.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "scanning", "strings.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("STRING \"\" ", out[0]);
         assertEquals("STRING \"string\" string", out[1]);
         assertEquals("EOF  null", out[2]);
@@ -127,12 +135,13 @@ public class InterpreterScanningTest {
 
     @Test
     public void testWhitespace() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "scanning", "whitespace.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "scanning", "whitespace.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("IDENTIFIER space null", out[0]);
         assertEquals("IDENTIFIER tabs null", out[1]);
         assertEquals("IDENTIFIER newlines null", out[2]);

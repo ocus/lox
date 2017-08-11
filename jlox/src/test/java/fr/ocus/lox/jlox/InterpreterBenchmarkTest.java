@@ -3,9 +3,12 @@ package fr.ocus.lox.jlox;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -18,84 +21,91 @@ public class InterpreterBenchmarkTest {
 
     @Test
     public void testBinaryTrees() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "binary_trees.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "binary_trees.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testEquality() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "equality.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "equality.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testFib() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "fib.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "fib.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testInvocation() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "invocation.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "invocation.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testMethodCall() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "method_call.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "method_call.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testProperties() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "properties.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "properties.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testStringEquality() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "benchmark", "string_equality.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "benchmark", "string_equality.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }

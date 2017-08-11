@@ -2,9 +2,12 @@ package fr.ocus.lox.jlox;
 
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -16,61 +19,76 @@ public class InterpreterCallTest {
 
     @Test
     public void testBool() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "call", "bool.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "call", "bool.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Can only call functions and classes."));
+        assertThat(err[1], containsString("[line 1]"));
     }
 
     @Test
     public void testNil() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "call", "nil.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "call", "nil.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Can only call functions and classes."));
+        assertThat(err[1], containsString("[line 1]"));
     }
 
     @Test
     public void testNum() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "call", "num.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "call", "num.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Can only call functions and classes."));
+        assertThat(err[1], containsString("[line 1]"));
     }
 
     @Test
     public void testObject() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "call", "object.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "call", "object.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Can only call functions and classes."));
+        assertThat(err[1], containsString("[line 4]"));
     }
 
     @Test
     public void testString() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "call", "string.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "call", "string.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Can only call functions and classes."));
+        assertThat(err[1], containsString("[line 1]"));
     }
 }

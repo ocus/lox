@@ -1,11 +1,13 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -13,17 +15,17 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-@Ignore
 public class InterpreterMethodTest {
 
     @Test
     public void testArity() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "arity.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "arity.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("no args", out[0]);
         assertEquals("1", out[1]);
         assertEquals("3", out[2]);
@@ -38,85 +40,102 @@ public class InterpreterMethodTest {
 
     @Test
     public void testEmptyBlock() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "empty_block.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "empty_block.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("nil", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testExtraArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "extra_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "extra_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 2 arguments but got 4."));
+        assertThat(err[1], containsString("[line 8]"));
     }
 
     @Test
     public void testMissingArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "missing_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "missing_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 2 arguments but got 1."));
+        assertThat(err[1], containsString("[line 5]"));
     }
 
     @Test
     public void testNotFound() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "not_found.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "not_found.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Undefined property 'unknown'."));
+        assertThat(err[1], containsString("[line 3]"));
     }
 
     @Test
     public void testReferToName() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "refer_to_name.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "refer_to_name.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Undefined variable 'method'."));
+        assertThat(err[1], containsString("[line 3]"));
     }
 
     @Test
     public void testTooManyArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "too_many_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "too_many_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at '9': Cannot have more than 8 arguments."));
     }
 
     @Test
     public void testTooManyParameters() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "method", "too_many_parameters.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "method", "too_many_parameters.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'i': Cannot have more than 8 parameters."));
     }
 }

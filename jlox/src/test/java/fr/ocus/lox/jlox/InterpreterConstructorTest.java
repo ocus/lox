@@ -1,11 +1,13 @@
 package fr.ocus.lox.jlox;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
@@ -13,17 +15,17 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-@Ignore
 public class InterpreterConstructorTest {
 
     @Test
     public void testArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("init", out[0]);
         assertEquals("1", out[1]);
         assertEquals("2", out[2]);
@@ -32,12 +34,13 @@ public class InterpreterConstructorTest {
 
     @Test
     public void testCallInitExplicitly() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "call_init_explicitly.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "call_init_explicitly.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Foo.init(one)", out[0]);
         assertEquals("Foo.init(two)", out[1]);
         assertEquals("Foo instance", out[2]);
@@ -47,36 +50,41 @@ public class InterpreterConstructorTest {
 
     @Test
     public void testDefault() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "default.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "default.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("Foo instance", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
     @Test
     public void testDefaultArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "default_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "default_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 0 arguments but got 3."));
+        assertThat(err[1], containsString("[line 3]"));
     }
 
     @Test
     public void testEarlyReturn() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "early_return.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "early_return.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("init", out[0]);
         assertEquals("Foo instance", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -84,36 +92,43 @@ public class InterpreterConstructorTest {
 
     @Test
     public void testExtraArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "extra_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "extra_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 2 arguments but got 4."));
+        assertThat(err[1], containsString("[line 8]"));
     }
 
     @Test
     public void testMissingArguments() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "missing_arguments.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "missing_arguments.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(2, err.length);
+        assertThat(err[0], containsString("Expected 2 arguments but got 1."));
+        assertThat(err[1], containsString("[line 5]"));
     }
 
     @Test
     public void testReturnInNestedFunction() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "return_in_nested_function.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "return_in_nested_function.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals("bar", out[0]);
         assertEquals("Foo instance", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -121,13 +136,15 @@ public class InterpreterConstructorTest {
 
     @Test
     public void testReturnValue() {
-        InterpreterTestHelper helper = new InterpreterTestHelper(Paths.get("src", "test", "resources", "programs", "constructor", "return_value.lox"));
+        Path file = Paths.get("src", "test", "resources", "programs", "constructor", "return_value.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println("OUT: " + Arrays.toString(out));
-        System.err.println("ERR: " + Arrays.toString(err));
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
-        assertArrayEquals(new String[]{""}, err);
+        assertEquals(1, err.length);
+        assertThat(err[0], containsString("Error at 'return': Cannot return a value from an initializer."));
     }
 }
