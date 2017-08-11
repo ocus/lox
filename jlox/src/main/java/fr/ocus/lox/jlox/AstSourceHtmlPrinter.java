@@ -112,6 +112,21 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
     }
 
     @Override
+    public String visitSetExpr(Expr.Set expr) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public String visitThisExpr(Expr.This expr) {
+        return wrap("span", "expr-this keyword", expr.keyword.lexeme);
+    }
+
+    @Override
+    public String visitSuperExpr(Expr.Super expr) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public String visitUnaryExpr(Expr.Unary expr) {
         StringBuilder builder = new StringBuilder();
 
@@ -340,6 +355,7 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         preHtml.append(".expr-literal .string { color: #6A8759; }");
         preHtml.append(".expr-literal .number { color: #6897BB; }");
         preHtml.append(".expr-logical { }");
+        preHtml.append(".expr-this { }");
         preHtml.append(".expr-unary { }");
         preHtml.append(".expr-variable { }");
         preHtml.append(".stmt-block { }");

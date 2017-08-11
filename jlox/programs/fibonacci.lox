@@ -1,8 +1,14 @@
 fun fibonacci(n) {
   if (n <= 1) return n;
+  dump_env();
   return fibonacci(n - 2) + fibonacci(n - 1);
 }
 
-for (var i = 0; i < 20; i = i + 1) {
-  print fibonacci(i);
+print "fibo:start";
+for (var i = 0; i < 10; i = i + 1) {
+  print "fibo:loopstart";
+  fibonacci(i);
+  dump_env();
+  print "fibo:loopend";
 }
+dump_env();

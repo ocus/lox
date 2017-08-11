@@ -25,6 +25,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         this.errorStream = errorStream;
         globals.define("clock", new LoxCallable() {
             @Override
+            public String toString() {
+                return "<fn:lox clock>";
+            }
+
+            @Override
             public int arity() {
                 return 0;
             }
@@ -32,6 +37,28 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             @Override
             public Object call(Interpreter interpreter, List<Object> arguments) {
                 return (double) System.currentTimeMillis() / 1000.0;
+            }
+        });
+        globals.define("dump_env", new LoxCallable() {
+            @Override
+            public String toString() {
+                return "<fn:lox dump_env>";
+            }
+
+            @Override
+            public int arity() {
+                return 0;
+            }
+
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguments) {
+                Map<String, Object> values = interpreter.environment.getAllValues();
+                print("Env dump start: (", values.size(), ")\n");
+                for (String name : values.keySet()) {
+                    print("- ", name, " = ", values.get(name), "\n");
+                }
+                print("Env dump end\n");
+                return null;
             }
         });
     }
@@ -158,6 +185,30 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitSetExpr(Expr.Set expr) {
+        Object value = evaluate(expr.value);
+        Object object = evaluate(expr.object);
+
+        if (object instanceof LoxInstance) {
+            ((LoxInstance) object).fields.put(expr.name.lexeme, value);
+            return value;
+        }
+
+        throw new RuntimeError(expr.name, "Only instances have fields.");
+    }
+
+    @Override
+    public Object visitThisExpr(Expr.This expr) {
+        return environment.get(expr.keyword);
+    }
+
+    @Override
+    public Object visitSuperExpr(Expr.Super expr) {
+//        throw new RuntimeException("Not implemented yet");
+        return null;
+    }
+
+    @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
         return expr.value;
     }
@@ -210,8 +261,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
-        printStream.print(stringify(value) + "\n"); // platform-independent newline
+        print(value, "\n"); // platform-independent newline
         return null;
+    }
+
+    private void print(Object... values) {
+        for (Object value : values) {
+            printStream.print(stringify(value));
+        }
     }
 
     @Override
@@ -254,8 +311,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
             environment = new Environment(environment);
             environment.define("super", superclass);
-
-            System.out.println(stmt.name.lexeme + " < " + superclass);
         }
         Map<String, LoxFunction> methods = new HashMap<>(stmt.methods.size());
         for (Stmt.Function method : stmt.methods) {

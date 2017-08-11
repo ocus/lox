@@ -101,6 +101,21 @@ public class AstSourcePrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
     }
 
     @Override
+    public String visitSetExpr(Expr.Set expr) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public String visitThisExpr(Expr.This expr) {
+        return expr.keyword.lexeme;
+    }
+
+    @Override
+    public String visitSuperExpr(Expr.Super expr) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public String visitUnaryExpr(Expr.Unary expr) {
         return "[EXPR-UNARY]";
     }

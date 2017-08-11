@@ -19,6 +19,21 @@ public class Environment {
         this.enclosing = enclosing;
     }
 
+    Map<String, Object> getValues() {
+        return values;
+    }
+
+    Map<String, Object> getAllValues() {
+        Map<String, Object> allValues = new HashMap<>();
+        Environment environment = this;
+        do {
+            allValues.putAll(environment.values);
+            environment = environment.enclosing;
+        } while (environment != null);
+
+        return allValues;
+    }
+
     boolean define(String name, Object value) {
         if (values.containsKey(name)) {
             return false;
@@ -49,5 +64,14 @@ public class Environment {
         if (enclosing != null) return enclosing.get(name);
 
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
+    }
+
+    Object getAt(int distance, String name) {
+        Environment environment = this;
+        for (int i = 0; i < distance; i++) {
+            environment = environment.enclosing;
+        }
+
+        return environment.values.get(name);
     }
 }
