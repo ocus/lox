@@ -66,6 +66,11 @@ public class AstSourcePrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
     }
 
     @Override
+    public String visitGetExpr(Expr.Get expr) {
+        throw new RuntimeError(expr.name, "Not supported yet.");
+    }
+
+    @Override
     public String visitGroupingExpr(Expr.Grouping expr) {
         StringBuilder builder = new StringBuilder();
 
@@ -108,6 +113,11 @@ public class AstSourcePrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
     @Override
     public String visitBlockStmt(Stmt.Block stmt) {
         return "{\n" + statementList(stmt.statements) + "}\n";
+    }
+
+    @Override
+    public String visitClassStmt(Stmt.Class stmt) {
+        return null;
     }
 
     @Override

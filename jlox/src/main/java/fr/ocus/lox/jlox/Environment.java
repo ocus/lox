@@ -19,8 +19,12 @@ public class Environment {
         this.enclosing = enclosing;
     }
 
-    void define(String name, Object value) {
+    boolean define(String name, Object value) {
+        if (values.containsKey(name)) {
+            return false;
+        }
         values.put(name, value);
+        return true;
     }
 
     void assign(Token name, Object value) {

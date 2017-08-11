@@ -8,7 +8,9 @@ import java.util.List;
 import static fr.ocus.lox.jlox.TokenType.AND;
 import static fr.ocus.lox.jlox.TokenType.BANG;
 import static fr.ocus.lox.jlox.TokenType.BANG_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.CLASS;
 import static fr.ocus.lox.jlox.TokenType.COMMA;
+import static fr.ocus.lox.jlox.TokenType.DOT;
 import static fr.ocus.lox.jlox.TokenType.ELSE;
 import static fr.ocus.lox.jlox.TokenType.EOF;
 import static fr.ocus.lox.jlox.TokenType.EQUAL;
@@ -49,7 +51,8 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  * <pre>
  * program        → declaration* EOF ;
  *
- * declaration    → funDecl
+ * declaration    → classDesc
+ *                | funDecl
  *                | varDecl
  *                | statement ;
  *
@@ -61,6 +64,7 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  *                | whileStmt
  *                | block ;
  *
+ * classDecl      → "class" IDENTIFIER ( "<" IDENTIFIER )? "{" function* "}" ;
  * funDecl        → "fun" function ;
  * varDecl        → "var" IDENTIFIER ( "=" expression )? ";" ;
  *
@@ -79,7 +83,7 @@ import static fr.ocus.lox.jlox.TokenType.WHILE;
  * block          → "{" declaration* "}" ;
  *
  * expression     → assignment ;
- * assignment     → identifier "=" assignment
+ * assignment     → IDENTIFIER "=" assignment
  *                | logic_or ;
  * logic_or       → logic_and ( "or" logic_and )* ;
  * logic_and      → equality ( "and" equality )* ;
@@ -156,9 +160,9 @@ public class Parser {
         return tokens.get(current - 1);
     }
 
-    // grammar
     private Stmt declaration() {
         try {
+            if (match(CLASS)) return classDeclaration();
             if (match(FUN)) return function("function");
             if (match(VAR)) return varDeclaration();
 
@@ -186,6 +190,22 @@ public class Parser {
         consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
         List<Stmt> body = block();
         return new Stmt.Function(name, parameters, body);
+    }
+
+    private Stmt classDeclaration() {
+        Token name = consume(IDENTIFIER, "Expect class name.");
+        Expr superclass = null;
+        if (match(LESS)) {
+            consume(IDENTIFIER, "Expect superclass name.");
+            superclass = new Expr.Variable(previous());
+        }
+        consume(LEFT_BRACE, "Expect '{' after class name.");
+        List<Stmt.Function> methods = new ArrayList<>();
+        while (!check(RIGHT_BRACE) && !isAtEnd()) {
+            methods.add(function("method"));
+        }
+        consume(RIGHT_BRACE, "Expect '}' after class methods.");
+        return new Stmt.Class(name, superclass, methods);
     }
 
     private Stmt varDeclaration() {
@@ -412,6 +432,9 @@ public class Parser {
         while (true) {
             if (match(LEFT_PAREN)) {
                 expr = finishCall(expr);
+            } else if (match(DOT)) {
+                Token name = consume(IDENTIFIER, "Expect property name after '.'.");
+                expr = new Expr.Get(expr, name);
             } else {
                 break;
             }

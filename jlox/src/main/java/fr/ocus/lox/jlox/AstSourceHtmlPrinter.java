@@ -1,7 +1,12 @@
 package fr.ocus.lox.jlox;
 
 import java.io.IOException;
+import java.nio.file.DirectoryIteratorException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +27,9 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
     }
 
     String print(Stmt stmt) {
+        if (stmt == null) {
+            throw new RuntimeException("null statement");
+        }
         return stmt.accept(this);
     }
 
@@ -32,9 +40,8 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         builder.append(wrap("span", "name", expr.name.lexeme));
         builder.append(wrap("span", "equal keyword", " = "));
         builder.append(wrap("span", "value", expr.value.accept(this)));
-        builder.append(semicolon());
 
-        return wrap("div", "expr-assign", builder.toString());
+        return wrap("span", "expr-assign", builder.toString());
     }
 
     @Override
@@ -64,6 +71,11 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         }
         builder.append(parenRight());
         return wrap("span", "expr-call", builder.toString());
+    }
+
+    @Override
+    public String visitGetExpr(Expr.Get expr) {
+        throw new RuntimeError(expr.name, "Not supported yet.");
     }
 
     @Override
@@ -130,10 +142,16 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
     }
 
     @Override
+    public String visitClassStmt(Stmt.Class stmt) {
+        return null;
+    }
+
+    @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(wrap("span", "expression", stmt.expression.accept(this)));
+        builder.append(semicolon());
 
         return wrap("div", "stmt-expression", builder.toString());
     }
@@ -267,9 +285,9 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         return String.format("<%1$s class=\"%2$s\">%3$s</%1$s>", tag, cssClass, element);
     }
 
-    private static String programToString(String path) {
+    private static String programToString(Path path) {
         try {
-            byte[] bytes = Files.readAllBytes(Paths.get(path));
+            byte[] bytes = Files.readAllBytes(path);
             Scanner scanner = new Scanner(System.err, new String(bytes));
             List<Token> tokens = scanner.scanTokens();
 
@@ -281,10 +299,32 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+        catch (RuntimeException e) {
+            return null;
+        }
+        return null;
+    }
+
+    private static List<Path> getLoxFiles(Path dir) {
+        PathMatcher loxMatcher = FileSystems.getDefault().getPathMatcher("glob:**.lox");
+        List<Path> files = new ArrayList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+            for (Path file : stream) {
+                if (loxMatcher.matches(file)) {
+                    files.add(file);
+                } else if (Files.isDirectory(file)) {
+                    files.addAll(getLoxFiles(file));
+                }
+            }
+        } catch (IOException | DirectoryIteratorException x) {
+            System.err.println(x);
+        }
+        return files;
     }
 
     public static void main(String[] args) {
+        List<Path> programs = getLoxFiles(Paths.get("src","test","resources","programs"));
+
         StringBuilder preHtml = new StringBuilder();
         preHtml.append("<html>");
         preHtml.append("<head>");
@@ -319,18 +359,14 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         preHtml.append("</head>");
         preHtml.append("<body>");
         System.out.println(preHtml.toString());
-        String[] programs = new String[]{
-            "programs/scope.lox",
-            "programs/fibonacci.lox",
-            "src/test/resources/programs/closure/assign_to_closure.lox",
-            "src/test/resources/programs/closure/nested_closure.lox",
-            "src/test/resources/programs/for/closure_in_body.lox",
-            "src/test/resources/programs/logical_operator/and.lox",
-        };
-        for (String program : programs) {
+        for (Path program : programs) {
+            String programStr = programToString(program);
+            if (programStr == null) {
+                continue;
+            }
             StringBuilder builder = new StringBuilder();
-            builder.append(wrap("h1", "program-file", program));
-            builder.append(wrap("div", "program-code", programToString(program)));
+            builder.append(wrap("h1", "program-file", program.toString()));
+            builder.append(wrap("div", "program-code", programStr));
             System.out.println(wrap("div", "program", builder.toString()));
         }
         System.out.println("</body></html>");
