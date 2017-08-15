@@ -16,14 +16,13 @@ class InterpreterTestHelper {
     private final ByteArrayOutputStream errBaos = new ByteArrayOutputStream();
     private final PrintStream out = new PrintStream(outBaos);
     private final PrintStream err = new PrintStream(errBaos);
-    private final Path sourceFile;
     private final byte[] source;
 
     InterpreterTestHelper(Path sourceFile) {
-        this.sourceFile = sourceFile;
+        Path sourceFile1 = sourceFile;
         byte[] bytes = new byte[0];
         try {
-            bytes = Files.readAllBytes(this.sourceFile);
+            bytes = Files.readAllBytes(sourceFile1);
         } catch (IOException e) {
             e.printStackTrace();
         }
