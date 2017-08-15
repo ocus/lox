@@ -20,11 +20,13 @@ MAIN_JAR_FILE := $(BUILD_DIR)/jlox.jar
 TEST_DIR := src/test/java
 TEST_BUILD_DIR := $(BUILD_DIR)/jlox/test
 TEST_PACKAGE := fr.ocus.lox.jlox
-TEST_SOURCES := $(call rwildcard, $(TEST_DIR)/$(subst .,/,$(TEST_PACKAGE)), *Test.java)
+TEST_SOURCES := $(call rwildcard, $(TEST_DIR)/$(subst .,/,$(TEST_PACKAGE)), *.java)
+TEST_SUITE_SOURCES := $(call rwildcard, $(TEST_DIR)/$(subst .,/,$(TEST_PACKAGE)), *Suite.java)
 TEST_DEPS := $(addprefix test_compile_$(TEST_BUILD_DIR)/,$(TEST_SOURCES:.java=.class))
 TEST_LIBS := $(subst $(space),;,$(wildcard libs/*.jar))
-TEST_CLASSES := $(addprefix $(TEST_PACKAGE)., $(basename $(notdir $(TEST_SOURCES))))
-TEST_JUNIT := $(addprefix test_junit_,$(TEST_CLASSES))
+TEST_SUITE_CLASSES := $(addprefix $(TEST_PACKAGE)., $(basename $(notdir $(TEST_SUITE_SOURCES))))
+TEST_SUITES := $(addprefix test_junit_suite_,$(TEST_SUITE_CLASSES))
+TEST_JUNIT_RUNNER := org.junit.runner.JUnitCore
 
 default: build
 
@@ -35,7 +37,7 @@ clean:
 build: $(MAIN_DEPS)
 build_test: build $(TEST_DEPS)
 
-test: build_test $(TEST_JUNIT)
+test: clean build_test $(TEST_SUITES)
 
 main_compile_$(MAIN_BUILD_DIR)/$(MAIN_DIR)%.class: $(MAIN_DIR)/%.java
 	@ mkdir -p $(MAIN_BUILD_DIR)
@@ -45,5 +47,5 @@ test_compile_$(TEST_BUILD_DIR)/$(TEST_DIR)%.class: $(TEST_DIR)/%.java
 	@ mkdir -p $(TEST_BUILD_DIR)
 	$(JAVAC) -cp "$(MAIN_DIR);$(TEST_DIR);$(TEST_LIBS)" -d $(TEST_BUILD_DIR) $(JAVAC_OPTIONS) -implicit:none $<
 
-test_junit_%:
-	-$(JAVA) -cp "$(MAIN_BUILD_DIR);$(TEST_BUILD_DIR);$(TEST_LIBS)" org.junit.runner.JUnitCore $(subst test_junit_,,$@)
+test_junit_suite_%:
+	$(JAVA) -cp "$(MAIN_BUILD_DIR);$(TEST_BUILD_DIR);$(TEST_LIBS)" $(TEST_JUNIT_RUNNER) $(subst test_junit_suite_,,$@)
