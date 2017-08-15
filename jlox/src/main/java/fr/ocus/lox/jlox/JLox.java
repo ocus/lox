@@ -1,12 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -45,8 +41,13 @@ public class JLox {
 
         Interpreter interpreter = new Interpreter(System.out, System.err);
         while (true) {
-            System.out.println("> ");
-            run(System.err, interpreter, reader.readLine());
+            System.out.print("> ");
+            String promptInput = reader.readLine();
+            if ("".equals(promptInput)) {
+                System.out.println("Bye.");
+                break;
+            }
+            run(System.err, interpreter, promptInput);
         }
     }
 
