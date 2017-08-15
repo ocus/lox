@@ -19,10 +19,9 @@ class InterpreterTestHelper {
     private final byte[] source;
 
     InterpreterTestHelper(Path sourceFile) {
-        Path sourceFile1 = sourceFile;
         byte[] bytes = new byte[0];
         try {
-            bytes = Files.readAllBytes(sourceFile1);
+            bytes = Files.readAllBytes(sourceFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
