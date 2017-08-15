@@ -95,6 +95,24 @@ public class GenerateInterpreterTests {
             Collections.sort(groupFiles);
             generateTest(outputDir, baseDir, groupFiles, group);
         }
+
+        Path outputFile = Paths.get(outputDir, "InterpreterTestSuite.java");
+        PrintWriter writer = new PrintWriter(outputFile.toAbsolutePath().toString(), "UTF-8");
+        writer.println("package fr.ocus.lox.jlox;");
+        writer.println("");
+        writer.println("import org.junit.runner.RunWith;");
+        writer.println("import org.junit.runners.Suite;");
+        writer.println("");
+        writer.println("@RunWith(Suite.class)");
+        writer.println("@Suite.SuiteClasses({");
+        for (String group : groupedPaths.keySet()) {
+            String camelCaseGroupName = (group != null && group.length() > 0 ? toCamelCase(group) : "");
+            writer.println("        Interpreter" + camelCaseGroupName + "Test.class,");
+        }
+        writer.println("})");
+        writer.println("public class InterpreterTestSuite {");
+        writer.println("}");
+        writer.close();
     }
 
     private static void generateTest(String outputDir, Path baseDir, List<Path> files, String groupName) throws IOException {
