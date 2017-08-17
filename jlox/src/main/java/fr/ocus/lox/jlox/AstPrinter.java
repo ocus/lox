@@ -247,7 +247,7 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     private void niy(Expr expr) {
-        throw new RuntimeException("Expr: not implemented yet " + expr + ".");
+        throw new RuntimeException("Expr: not implemented yet " + expr.getClass().getName() + ".");
     }
 
     private void niy(Stmt stmt) {

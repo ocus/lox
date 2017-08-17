@@ -207,7 +207,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitSuperExpr(Expr.Super expr) {
-//        throw new RuntimeException("Not implemented yet");
+        niy(expr);
         return null;
     }
 
@@ -239,7 +239,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitArrayExpr(Expr.Array expr) {
-        throw new RuntimeException("Not implemented yet");
+        niy(expr);
+        return null;
     }
 
     @Override
@@ -394,4 +395,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return object.toString();
     }
 
+    private void niy(Expr expr) {
+        throw new RuntimeException("Expr: not implemented yet " + expr.getClass().getName() + ".");
+    }
+
+    private void niy(Stmt stmt) {
+        throw new RuntimeException("Stmt: not implemented yet " + stmt.getClass().getName() + ".");
+    }
 }
