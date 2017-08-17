@@ -3,4 +3,4 @@
 ARGS=""
 if [ "-" != "-$@" ] ; then ARGS="-Pfile=$@"; fi
 
-./gradlew --console=plain -q ${ARGS} clean jlox
+./gradlew --console=plain -q ${ARGS} jlox
