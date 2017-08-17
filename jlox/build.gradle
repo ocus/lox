@@ -42,11 +42,11 @@ jar {
 //}
 //jlox.dependsOn jar
 
-test {
-    filter {
-        includeTestsMatching "*TestSuite"
-    }
-}
+//test {
+//    filter {
+//        includeTestsMatching "*Test"
+//    }
+//}
 
 /**
  * Tool tasks
@@ -66,6 +66,8 @@ task generateInterpreterTests(group: 'tool', type: JavaExec) {
     args = ['src/test/java/fr/ocus/lox/jlox']
 }
 
+import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 task wrapper(type: Wrapper) {
     gradleVersion = '4.0'
+    distributionType = DistributionType.ALL
 }
