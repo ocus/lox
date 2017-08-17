@@ -47,7 +47,7 @@ public class GenerateInterpreterTests {
         Path dir = Paths.get("src", "test", "resources", "programs");
         List<Path> files = getLoxFiles(dir);
 
-        generateTests(outputDir, dir, files);
+        generateTests(outputDir, dir, files, false);
     }
 
     private static List<Path> getLoxFiles(Path dir) {
@@ -66,7 +66,7 @@ public class GenerateInterpreterTests {
         return files;
     }
 
-    private static void generateTests(String outputDir, Path baseDir, List<Path> files) throws IOException {
+    private static void generateTests(String outputDir, Path baseDir, List<Path> files, boolean generateSuite) throws IOException {
         Map<String, ArrayList<Path>> groupedPaths = new HashMap<>();
         for (Path file : files) {
             Path relative = baseDir.relativize(file);
@@ -88,23 +88,25 @@ public class GenerateInterpreterTests {
             groupNames.add(group);
         }
 
-        Path outputFile = Paths.get(outputDir, "InterpreterTestSuite.java");
-        PrintWriter writer = new PrintWriter(outputFile.toAbsolutePath().toString(), "UTF-8");
-        writer.println("package fr.ocus.lox.jlox;");
-        writer.println("");
-        writer.println("import org.junit.runner.RunWith;");
-        writer.println("import org.junit.runners.Suite;");
-        writer.println("");
-        writer.println("@RunWith(Suite.class)");
-        writer.println("@Suite.SuiteClasses({");
-        for (String group : groupNames) {
-            String camelCaseGroupName = (group != null && group.length() > 0 ? toCamelCase(group) : "");
-            writer.println("        Interpreter" + camelCaseGroupName + "Test.class,");
+        if (generateSuite) {
+            Path outputFile = Paths.get(outputDir, "InterpreterTestSuite.java");
+            PrintWriter writer = new PrintWriter(outputFile.toAbsolutePath().toString(), "UTF-8");
+            writer.println("package fr.ocus.lox.jlox;");
+            writer.println("");
+            writer.println("import org.junit.runner.RunWith;");
+            writer.println("import org.junit.runners.Suite;");
+            writer.println("");
+            writer.println("@RunWith(Suite.class)");
+            writer.println("@Suite.SuiteClasses({");
+            for (String group : groupNames) {
+                String camelCaseGroupName = (group != null && group.length() > 0 ? toCamelCase(group) : "");
+                writer.println("        Interpreter" + camelCaseGroupName + "Test.class,");
+            }
+            writer.println("})");
+            writer.println("public class InterpreterTestSuite {");
+            writer.println("}");
+            writer.close();
         }
-        writer.println("})");
-        writer.println("public class InterpreterTestSuite {");
-        writer.println("}");
-        writer.close();
     }
 
     private static void generateTest(String outputDir, Path baseDir, List<Path> files, String groupName) throws IOException {
@@ -185,21 +187,21 @@ public class GenerateInterpreterTests {
                     errorExpect.add("[line " + (l + 1) + "]");
                 }
 
-                Map<String, Pattern> patterns = new HashMap<String, Pattern>() {{
-                    put("ERROR_EXPECT", ERROR_EXPECT);
-                    put("ERROR_LINE_EXPECT", ERROR_LINE_EXPECT);
-                    put("RUNTIME_ERROR_EXPECT", RUNTIME_ERROR_EXPECT);
-                    put("SYNTAX_ERROR_RE", SYNTAX_ERROR_RE);
-                    put("STACK_TRACE_RE", STACK_TRACE_RE);
-                    put("NONTEST_RE", NONTEST_RE);
-                }};
-                for (String name : patterns.keySet()) {
-                    Pattern pattern = patterns.get(name);
-                    Matcher m = pattern.matcher(line);
-                    if (m.find()) {
-                        System.out.println(file + " @@@ " + line + " @@@  " + name + " @@@ " + m.group(0));
-                    }
-                }
+//                Map<String, Pattern> patterns = new HashMap<String, Pattern>() {{
+//                    put("ERROR_EXPECT", ERROR_EXPECT);
+//                    put("ERROR_LINE_EXPECT", ERROR_LINE_EXPECT);
+//                    put("RUNTIME_ERROR_EXPECT", RUNTIME_ERROR_EXPECT);
+//                    put("SYNTAX_ERROR_RE", SYNTAX_ERROR_RE);
+//                    put("STACK_TRACE_RE", STACK_TRACE_RE);
+//                    put("NONTEST_RE", NONTEST_RE);
+//                }};
+//                for (String name : patterns.keySet()) {
+//                    Pattern pattern = patterns.get(name);
+//                    Matcher m = pattern.matcher(line);
+//                    if (m.find()) {
+//                        System.out.println(file + " @@@ " + line + " @@@  " + name + " @@@ " + m.group(0));
+//                    }
+//                }
             }
             if (outputExpect.size() == 0) {
                 writer.println("        assertArrayEquals(new String[]{\"\"}, out);");
