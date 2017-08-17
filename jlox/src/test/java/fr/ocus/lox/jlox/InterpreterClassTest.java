@@ -26,6 +26,7 @@ public class InterpreterClassTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -39,6 +40,7 @@ public class InterpreterClassTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("in foo", out[0]);
         assertEquals("in bar", out[1]);
         assertEquals("in baz", out[2]);
@@ -54,6 +56,7 @@ public class InterpreterClassTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -67,6 +70,7 @@ public class InterpreterClassTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

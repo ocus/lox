@@ -1,0 +1,71 @@
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceSets {
+    tool
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+
+mainClassName = 'fr.ocus.lox.jlox.JLox'
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': mainClassName
+        )
+    }
+}
+
+////noinspection GroovyAssignabilityCheck
+//task jloxMain(group: 'jlox', type: JavaExec) {
+//    main = 'fr.ocus.lox.jlox.JLox'
+//    classpath = sourceSets.main.runtimeClasspath
+//    args = [file]
+//}
+//jloxMain.dependsOn classes
+
+//noinspection GroovyAssignabilityCheck
+//task jlox(group: 'jlox', type: JavaExec) {
+//    main = '-jar'
+//    args = [
+//            jar.archivePath,
+//            file
+//    ]
+//}
+//jlox.dependsOn jar
+
+test {
+    filter {
+        includeTestsMatching "*TestSuite"
+    }
+}
+
+/**
+ * Tool tasks
+ **/
+
+//noinspection GroovyAssignabilityCheck
+task generateAst(group: 'tool', type: JavaExec) {
+    main = 'fr.ocus.lox.tool.GenerateAst'
+    classpath = sourceSets.tool.runtimeClasspath
+    args = ['src/main/java/fr/ocus/lox/jlox']
+}
+
+//noinspection GroovyAssignabilityCheck
+task generateInterpreterTests(group: 'tool', type: JavaExec) {
+    main = 'fr.ocus.lox.tool.GenerateInterpreterTests'
+    classpath = sourceSets.test.runtimeClasspath
+    args = ['src/test/java/fr/ocus/lox/jlox']
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
+}

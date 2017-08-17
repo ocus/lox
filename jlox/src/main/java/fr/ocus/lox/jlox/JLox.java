@@ -43,7 +43,7 @@ public class JLox {
         while (true) {
             System.out.print("> ");
             String promptInput = reader.readLine();
-            if ("".equals(promptInput)) {
+            if (promptInput == null || "".equals(promptInput)) {
                 System.out.println("Bye.");
                 break;
             }

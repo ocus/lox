@@ -40,6 +40,7 @@ public class InterpreterFunctionTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("nil", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -83,6 +84,7 @@ public class InterpreterFunctionTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("21", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -125,6 +127,7 @@ public class InterpreterFunctionTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("true", out[0]);
         assertEquals("true", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -139,6 +142,7 @@ public class InterpreterFunctionTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(9, out.length);
         assertEquals("0", out[0]);
         assertEquals("1", out[1]);
         assertEquals("3", out[2]);
@@ -160,6 +164,7 @@ public class InterpreterFunctionTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("<fn foo>", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -173,6 +178,7 @@ public class InterpreterFunctionTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("21", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

@@ -26,6 +26,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(4, out.length);
         assertEquals("local", out[0]);
         assertEquals("after f", out[1]);
         assertEquals("after f", out[2]);
@@ -42,21 +43,9 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("inner", out[0]);
         assertEquals("assigned", out[1]);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testClosedClosureInFunction() {
-        Path file = Paths.get("src", "test", "resources", "programs", "closure", "closed_closure_in_function.lox");
-        InterpreterTestHelper helper = new InterpreterTestHelper(file);
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
-        assertEquals("local", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
@@ -69,6 +58,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("param", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -82,6 +72,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("b", out[0]);
         assertEquals("a", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -96,7 +87,22 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("param", out[0]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
+    public void testClosedClosureInFunction() {
+        Path file = Paths.get("src", "test", "resources", "programs", "closure", "closed_closure_in_function.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
+        assertEquals("local", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 
@@ -109,6 +115,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("a", out[0]);
         assertEquals("b", out[1]);
         assertEquals("c", out[2]);
@@ -124,6 +131,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("local", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -137,6 +145,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("a", out[0]);
         assertEquals("a", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -151,6 +160,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("a", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -164,6 +174,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("closure", out[0]);
         assertEquals("shadow", out[1]);
         assertEquals("closure", out[2]);
@@ -179,6 +190,7 @@ public class InterpreterClosureTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("ok", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

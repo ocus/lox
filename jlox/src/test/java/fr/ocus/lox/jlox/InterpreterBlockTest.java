@@ -26,6 +26,7 @@ public class InterpreterBlockTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("ok", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -39,6 +40,7 @@ public class InterpreterBlockTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("inner", out[0]);
         assertEquals("outer", out[1]);
         assertArrayEquals(new String[]{""}, err);

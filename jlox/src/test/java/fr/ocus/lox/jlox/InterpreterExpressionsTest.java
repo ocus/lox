@@ -28,6 +28,7 @@ public class InterpreterExpressionsTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("2", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -41,6 +42,7 @@ public class InterpreterExpressionsTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("(+ (group (- 5.0 (group (- 3.0 1.0)))) (- 1.0))", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

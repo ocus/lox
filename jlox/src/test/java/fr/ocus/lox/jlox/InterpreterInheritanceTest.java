@@ -73,6 +73,7 @@ public class InterpreterInheritanceTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("foo", out[0]);
         assertEquals("bar", out[1]);
         assertEquals("bar", out[2]);
@@ -102,6 +103,7 @@ public class InterpreterInheritanceTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(6, out.length);
         assertEquals("foo 1", out[0]);
         assertEquals("foo 2", out[1]);
         assertEquals("bar 1", out[2]);

@@ -26,6 +26,7 @@ public class InterpreterBoolTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(18, out.length);
         assertEquals("true", out[0]);
         assertEquals("false", out[1]);
         assertEquals("false", out[2]);
@@ -56,6 +57,7 @@ public class InterpreterBoolTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("false", out[0]);
         assertEquals("true", out[1]);
         assertEquals("true", out[2]);

@@ -54,6 +54,7 @@ public class InterpreterNumberTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(6, out.length);
         assertEquals("123", out[0]);
         assertEquals("987654", out[1]);
         assertEquals("0", out[2]);

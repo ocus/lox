@@ -39,6 +39,7 @@ public class InterpreterTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(13, out.length);
         assertEquals("14", out[0]);
         assertEquals("8", out[1]);
         assertEquals("4", out[2]);

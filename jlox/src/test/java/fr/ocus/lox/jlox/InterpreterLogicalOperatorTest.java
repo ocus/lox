@@ -26,6 +26,7 @@ public class InterpreterLogicalOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(7, out.length);
         assertEquals("false", out[0]);
         assertEquals("1", out[1]);
         assertEquals("false", out[2]);
@@ -45,6 +46,7 @@ public class InterpreterLogicalOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(5, out.length);
         assertEquals("false", out[0]);
         assertEquals("nil", out[1]);
         assertEquals("ok", out[2]);
@@ -62,6 +64,7 @@ public class InterpreterLogicalOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(7, out.length);
         assertEquals("1", out[0]);
         assertEquals("1", out[1]);
         assertEquals("true", out[2]);
@@ -81,6 +84,7 @@ public class InterpreterLogicalOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(5, out.length);
         assertEquals("ok", out[0]);
         assertEquals("ok", out[1]);
         assertEquals("true", out[2]);

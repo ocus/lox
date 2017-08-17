@@ -26,6 +26,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("579", out[0]);
         assertEquals("string", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -130,6 +131,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(20, out.length);
         assertEquals("true", out[0]);
         assertEquals("false", out[1]);
         assertEquals("false", out[2]);
@@ -162,6 +164,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("4", out[0]);
         assertEquals("1", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -206,6 +209,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(10, out.length);
         assertEquals("true", out[0]);
         assertEquals("true", out[1]);
         assertEquals("false", out[2]);
@@ -228,6 +232,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("true", out[0]);
         assertEquals("false", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -362,6 +367,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("15", out[0]);
         assertEquals("3.702", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -406,6 +412,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("-3", out[0]);
         assertEquals("3", out[1]);
         assertEquals("-3", out[2]);
@@ -436,6 +443,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(8, out.length);
         assertEquals("false", out[0]);
         assertEquals("true", out[1]);
         assertEquals("true", out[2]);
@@ -456,6 +464,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("false", out[0]);
         assertEquals("false", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -470,6 +479,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(10, out.length);
         assertEquals("false", out[0]);
         assertEquals("false", out[1]);
         assertEquals("true", out[2]);
@@ -492,6 +502,7 @@ public class InterpreterOperatorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("1", out[0]);
         assertEquals("0", out[1]);
         assertArrayEquals(new String[]{""}, err);

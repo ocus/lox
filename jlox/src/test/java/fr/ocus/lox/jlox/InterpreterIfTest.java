@@ -54,6 +54,7 @@ public class InterpreterIfTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("good", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -67,6 +68,7 @@ public class InterpreterIfTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("good", out[0]);
         assertEquals("good", out[1]);
         assertEquals("block", out[2]);
@@ -110,6 +112,7 @@ public class InterpreterIfTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("good", out[0]);
         assertEquals("block", out[1]);
         assertEquals("true", out[2]);
@@ -125,6 +128,7 @@ public class InterpreterIfTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(5, out.length);
         assertEquals("false", out[0]);
         assertEquals("nil", out[1]);
         assertEquals("true", out[2]);

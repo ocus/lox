@@ -26,6 +26,7 @@ public class InterpreterConstructorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("init", out[0]);
         assertEquals("1", out[1]);
         assertEquals("2", out[2]);
@@ -41,6 +42,7 @@ public class InterpreterConstructorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(4, out.length);
         assertEquals("Foo.init(one)", out[0]);
         assertEquals("Foo.init(two)", out[1]);
         assertEquals("Foo instance", out[2]);
@@ -57,6 +59,7 @@ public class InterpreterConstructorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Foo instance", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -85,6 +88,7 @@ public class InterpreterConstructorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("init", out[0]);
         assertEquals("Foo instance", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -129,6 +133,7 @@ public class InterpreterConstructorTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("bar", out[0]);
         assertEquals("Foo instance", out[1]);
         assertArrayEquals(new String[]{""}, err);

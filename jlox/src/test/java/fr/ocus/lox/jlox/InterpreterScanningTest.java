@@ -28,6 +28,7 @@ public class InterpreterScanningTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(9, out.length);
         assertEquals("IDENTIFIER andy null", out[0]);
         assertEquals("IDENTIFIER formless null", out[1]);
         assertEquals("IDENTIFIER fo null", out[2]);
@@ -49,6 +50,7 @@ public class InterpreterScanningTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(16, out.length);
         assertEquals("AND and null", out[0]);
         assertEquals("CLASS class null", out[1]);
         assertEquals("ELSE else null", out[2]);
@@ -77,6 +79,7 @@ public class InterpreterScanningTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(7, out.length);
         assertEquals("NUMBER 123 123.0", out[0]);
         assertEquals("NUMBER 123.456 123.456", out[1]);
         assertEquals("DOT . null", out[2]);
@@ -96,6 +99,7 @@ public class InterpreterScanningTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(19, out.length);
         assertEquals("LEFT_PAREN ( null", out[0]);
         assertEquals("RIGHT_PAREN ) null", out[1]);
         assertEquals("LEFT_BRACE { null", out[2]);
@@ -127,6 +131,7 @@ public class InterpreterScanningTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("STRING \"\" ", out[0]);
         assertEquals("STRING \"string\" string", out[1]);
         assertEquals("EOF  null", out[2]);
@@ -142,6 +147,7 @@ public class InterpreterScanningTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(5, out.length);
         assertEquals("IDENTIFIER space null", out[0]);
         assertEquals("IDENTIFIER tabs null", out[1]);
         assertEquals("IDENTIFIER newlines null", out[2]);

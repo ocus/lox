@@ -26,6 +26,7 @@ public class InterpreterMethodTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(9, out.length);
         assertEquals("no args", out[0]);
         assertEquals("1", out[1]);
         assertEquals("3", out[2]);
@@ -47,6 +48,7 @@ public class InterpreterMethodTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("nil", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

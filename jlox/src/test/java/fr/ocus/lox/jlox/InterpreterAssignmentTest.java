@@ -26,6 +26,7 @@ public class InterpreterAssignmentTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("c", out[0]);
         assertEquals("c", out[1]);
         assertEquals("c", out[2]);
@@ -41,6 +42,7 @@ public class InterpreterAssignmentTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(4, out.length);
         assertEquals("before", out[0]);
         assertEquals("after", out[1]);
         assertEquals("arg", out[2]);
@@ -85,6 +87,7 @@ public class InterpreterAssignmentTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(4, out.length);
         assertEquals("before", out[0]);
         assertEquals("after", out[1]);
         assertEquals("arg", out[2]);
@@ -115,6 +118,7 @@ public class InterpreterAssignmentTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("var", out[0]);
         assertEquals("var", out[1]);
         assertArrayEquals(new String[]{""}, err);

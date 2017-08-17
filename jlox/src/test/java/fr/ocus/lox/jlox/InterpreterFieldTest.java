@@ -26,6 +26,7 @@ public class InterpreterFieldTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("bar", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -144,6 +145,7 @@ public class InterpreterFieldTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(79, out.length);
         assertEquals("apple", out[0]);
         assertEquals("apricot", out[1]);
         assertEquals("avocado", out[2]);
@@ -235,6 +237,7 @@ public class InterpreterFieldTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("got method", out[0]);
         assertEquals("arg", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -249,6 +252,7 @@ public class InterpreterFieldTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("foo1", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -262,6 +266,7 @@ public class InterpreterFieldTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(4, out.length);
         assertEquals("bar value", out[0]);
         assertEquals("baz value", out[1]);
         assertEquals("bar value", out[2]);

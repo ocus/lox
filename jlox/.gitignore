@@ -8,7 +8,7 @@
 .idea/**/tasks.xml
 .idea/dictionaries
 .idea/sonarlint
-build/
+build
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
@@ -22,6 +22,8 @@ build/
 # Gradle:
 .idea/**/gradle.xml
 .idea/**/libraries
+.gradletasknamecache
+.gradle
 
 # CMake
 cmake-build-debug/

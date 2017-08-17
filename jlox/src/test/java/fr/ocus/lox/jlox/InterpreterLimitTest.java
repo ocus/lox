@@ -42,6 +42,7 @@ public class InterpreterLimitTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("ok", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

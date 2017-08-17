@@ -41,6 +41,7 @@ public class InterpreterStringTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("()", out[0]);
         assertEquals("a string", out[1]);
         assertEquals("A~¶Þॐஃ", out[2]);
@@ -56,6 +57,7 @@ public class InterpreterStringTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("1", out[0]);
         assertEquals("2", out[1]);
         assertEquals("3", out[2]);

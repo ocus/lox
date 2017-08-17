@@ -26,6 +26,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("A.method(arg)", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -39,6 +40,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("Derived.bar()", out[0]);
         assertEquals("Base.foo()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -53,6 +55,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("Derived.foo()", out[0]);
         assertEquals("Base.foo()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -67,6 +70,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Base", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -80,6 +84,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("Derived.init()", out[0]);
         assertEquals("Base.init(a, b)", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -94,6 +99,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Derived.foo()", out[0]);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Expected 2 arguments but got 4."));
@@ -109,6 +115,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("C.foo()", out[0]);
         assertEquals("A.foo()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -195,6 +202,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("Base.method()", out[0]);
         assertEquals("Base.method()", out[1]);
         assertArrayEquals(new String[]{""}, err);
@@ -224,6 +232,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("A", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -237,6 +246,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("A", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -292,6 +302,7 @@ public class InterpreterSuperTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(2, out.length);
         assertEquals("a", out[0]);
         assertEquals("b", out[1]);
         assertArrayEquals(new String[]{""}, err);

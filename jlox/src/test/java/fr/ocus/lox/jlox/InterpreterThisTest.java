@@ -26,6 +26,7 @@ public class InterpreterThisTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -39,6 +40,7 @@ public class InterpreterThisTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(3, out.length);
         assertEquals("Outer instance", out[0]);
         assertEquals("Outer instance", out[1]);
         assertEquals("Inner instance", out[2]);
@@ -54,6 +56,7 @@ public class InterpreterThisTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -81,6 +84,7 @@ public class InterpreterThisTest {
         String[] err = helper.getError();
         System.err.println(file + " :: OUT: " + Arrays.toString(out));
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
         assertEquals("baz", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }

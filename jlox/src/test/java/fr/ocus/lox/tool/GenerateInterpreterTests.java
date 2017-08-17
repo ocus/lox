@@ -2,18 +2,8 @@ package fr.ocus.lox.tool;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.DirectoryIteratorException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.nio.file.*;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,10 +80,12 @@ public class GenerateInterpreterTests {
             groupedPaths.get(group).add(file);
         }
 
+        Set<String> groupNames = new TreeSet<>();
         for (String group : groupedPaths.keySet()) {
             List<Path> groupFiles = groupedPaths.get(group);
             Collections.sort(groupFiles);
             generateTest(outputDir, baseDir, groupFiles, group);
+            groupNames.add(group);
         }
 
         Path outputFile = Paths.get(outputDir, "InterpreterTestSuite.java");
@@ -105,7 +97,7 @@ public class GenerateInterpreterTests {
         writer.println("");
         writer.println("@RunWith(Suite.class)");
         writer.println("@Suite.SuiteClasses({");
-        for (String group : groupedPaths.keySet()) {
+        for (String group : groupNames) {
             String camelCaseGroupName = (group != null && group.length() > 0 ? toCamelCase(group) : "");
             writer.println("        Interpreter" + camelCaseGroupName + "Test.class,");
         }
@@ -166,15 +158,15 @@ public class GenerateInterpreterTests {
             writer.println("        System.err.println(file + \" :: ERR: \" + Arrays.toString(err));");
             List<String> lines = Files.readAllLines(file);
             int outputExpectIndex = 0;
-//            int errorExpectIndex = 0;
+            List<String> outputExpect = new ArrayList<>();
             List<String> errorExpect = new ArrayList<>();
-//            boolean expectError = false;
             for (int l = 0; l < lines.size(); l++) {
                 String line = lines.get(l);
                 Matcher mOutputExpect = OUTPUT_EXPECT.matcher(line);
                 if (mOutputExpect.find()) {
-                    writer.println("        assertEquals(\"" + mOutputExpect.group(1).replaceAll("\"", "\\\\\"") + "\", out[" + outputExpectIndex + "]);");
-                    outputExpectIndex++;
+                    outputExpect.add(mOutputExpect.group(1));
+//                    writer.println("        assertEquals(\"" + mOutputExpect.group(1).replaceAll("\"", "\\\\\"") + "\", out[" + outputExpectIndex + "]);");
+//                    outputExpectIndex++;
                 }
                 Matcher mErrorExpect = ERROR_EXPECT.matcher(line);
                 if (mErrorExpect.find()) {
@@ -209,8 +201,14 @@ public class GenerateInterpreterTests {
                     }
                 }
             }
-            if (outputExpectIndex == 0) {
+            if (outputExpect.size() == 0) {
                 writer.println("        assertArrayEquals(new String[]{\"\"}, out);");
+            }
+            else {
+                writer.println("        assertEquals(" + outputExpect.size() + ", out.length);");
+                for (int i = 0; i < outputExpect.size(); i++) {
+                    writer.println("        assertEquals(\"" + outputExpect.get(i).replaceAll("\"", "\\\\\"") + "\", out[" + i + "]);");
+                }
             }
             if (errorExpect.size() == 0) {
                 writer.println("        assertArrayEquals(new String[]{\"\"}, err);");
