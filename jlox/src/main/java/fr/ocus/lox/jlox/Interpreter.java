@@ -68,6 +68,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             for (Stmt statement : statements) {
                 execute(statement);
             }
+        }
+        catch (Return error) {
+            JLox.error(errorStream, new Token(TokenType.RETURN, "return", null, -1), "Cannot return from top-level code.");
         } catch (RuntimeError error) {
             JLox.runtimeError(errorStream, error);
         }
