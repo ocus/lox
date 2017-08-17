@@ -1,0 +1,4 @@
+var empty = [];
+print empty;
+var one = [12];
+print one;

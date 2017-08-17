@@ -34,6 +34,11 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
     }
 
     @Override
+    public String visitArrayExpr(Expr.Array expr) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public String visitAssignExpr(Expr.Assign expr) {
         StringBuilder builder = new StringBuilder();
 

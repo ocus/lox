@@ -17,6 +17,11 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitArrayExpr(Expr.Array expr) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public String visitAssignExpr(Expr.Assign expr) {
         return parenthesize(expr.name.lexeme, expr.value);
     }
