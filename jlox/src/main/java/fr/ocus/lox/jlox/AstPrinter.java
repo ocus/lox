@@ -1,6 +1,10 @@
 package fr.ocus.lox.jlox;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @author Matthieu Honel <ocus51@gmail.com>
@@ -33,7 +37,17 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
     @Override
     public String visitSetExpr(Expr.Set expr) {
-        throw new RuntimeException("Not implemented yet");
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(set ");
+        builder.append(expr.object.accept(this));
+        builder.append(" ");
+        builder.append(expr.name.lexeme);
+        builder.append(" ");
+        builder.append(expr.value.accept(this));
+        builder.append(")");
+
+        return builder.toString();
     }
 
     @Override
@@ -43,7 +57,8 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
     @Override
     public String visitSuperExpr(Expr.Super expr) {
-        throw new RuntimeException("Not implemented yet");
+        niy(expr);
+        return null;
     }
 
     @Override
@@ -53,12 +68,20 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
     @Override
     public String visitCallExpr(Expr.Call expr) {
-        return parenthesize(expr.callee.accept(this), expr.arguments.toArray(new Expr[0]));
+        return parenthesize("call " + expr.callee.accept(this), expr.arguments.toArray(new Expr[]{}));
     }
 
     @Override
     public String visitGetExpr(Expr.Get expr) {
-        throw new RuntimeError(expr.name, "Not supported yet.");
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(get ");
+        builder.append(expr.object.accept(this));
+        builder.append(" ");
+        builder.append(expr.name.lexeme);
+        builder.append(")");
+
+        return builder.toString();
     }
 
     @Override
@@ -69,6 +92,7 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     @Override
     public String visitLiteralExpr(Expr.Literal expr) {
         if (expr.value == null) return "nil";
+        if (expr.value instanceof String) return "\"" + expr.value + "\"";
         return expr.value.toString();
     }
 
@@ -79,52 +103,109 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
     @Override
     public String visitVariableExpr(Expr.Variable expr) {
-        return "$" + expr.name.lexeme;
+        return expr.name.lexeme;
     }
 
     @Override
     public String visitBlockStmt(Stmt.Block stmt) {
-        return null;
+        return parenthesize("block", stmt.statements.toArray(new Stmt[]{}));
     }
 
     @Override
     public String visitClassStmt(Stmt.Class stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(class ");
+        builder.append(stmt.name.lexeme);
+        if (stmt.superclass != null) {
+            builder.append(" ");
+            builder.append("<<");
+            builder.append(stmt.superclass.accept(this));
+        }
+        if (!stmt.methods.isEmpty()) {
+            builder.append(" ");
+            builder.append(parenthesize("methods", stmt.methods.toArray(new Stmt[]{})));
+        }
+        builder.append(")");
+
+        return builder.toString();
     }
 
     @Override
     public String visitExpressionStmt(Stmt.Expression stmt) {
-        return null;
+        return parenthesize("expression", stmt.expression);
     }
 
     @Override
     public String visitFunctionStmt(Stmt.Function stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(function ");
+        builder.append(stmt.name.lexeme);
+        if (!stmt.parameters.isEmpty()) {
+            builder.append(" ");
+            builder.append(parenthesize("parameters", stmt.parameters.toArray(new Token[]{})));
+        }
+        if (!stmt.body.isEmpty()) {
+            builder.append(" ");
+            builder.append(parenthesize("body", stmt.body.toArray(new Stmt[]{})));
+        }
+        builder.append(")");
+
+        return builder.toString();
     }
 
     @Override
     public String visitIfStmt(Stmt.If stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(if ");
+        builder.append(parenthesize("condition", stmt.condition));
+        builder.append(" ");
+        builder.append(parenthesize("then", stmt.thenBranch));
+        if (stmt.elseBranch != null) {
+            builder.append(" ");
+            builder.append(parenthesize("else", stmt.thenBranch));
+        }
+        builder.append(")");
+
+        return builder.toString();
     }
 
     @Override
     public String visitPrintStmt(Stmt.Print stmt) {
-        return null;
+        return parenthesize("print", stmt.expression);
     }
 
     @Override
     public String visitVarStmt(Stmt.Var stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append("(var ");
+        builder.append(stmt.name.lexeme);
+        if (stmt.initializer != null) {
+            builder.append(" ");
+            builder.append(stmt.initializer.accept(this));
+        }
+        builder.append(")");
+        return builder.toString();
     }
 
     @Override
     public String visitReturnStmt(Stmt.Return stmt) {
-        return null;
+        return parenthesize("return", stmt.value);
     }
 
     @Override
     public String visitWhileStmt(Stmt.While stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(while ");
+        builder.append(parenthesize("condition", stmt.condition));
+        builder.append(" ");
+        builder.append(parenthesize("body", stmt.body));
+        builder.append(")");
+
+        return builder.toString();
     }
 
     private String parenthesize(String name, Expr... exprs) {
@@ -140,43 +221,54 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         return builder.toString();
     }
 
-    public static void main(String[] args) {
-        Expr expression = new Expr.Binary(
-            new Expr.Unary(
-                new Token(TokenType.MINUS, "-", null, 1),
-                new Expr.Literal(123)
-            ),
-            new Token(TokenType.STAR, "*", null, 1),
-            new Expr.Grouping(
-                new Expr.Literal(45.67)
-            )
-        );
+    private String parenthesize(String name, Stmt... stmts) {
+        StringBuilder builder = new StringBuilder();
 
-        System.out.println(new AstPrinter().print(expression));
+        builder.append("(").append(name);
+        for (Stmt stmt : stmts) {
+            builder.append(" ");
+            builder.append(stmt.accept(this));
+        }
+        builder.append(")");
 
-        expression = new Expr.Binary(
-            new Expr.Variable(new Token(TokenType.VAR, "myVar", null, 1)),
-            new Token(TokenType.STAR, "/", null, 1),
-            new Expr.Binary(
-                new Expr.Binary(new Expr.Literal(1), new Token(TokenType.PLUS, "+", null, 1), new Expr.Literal(2)),
-                new Token(TokenType.STAR, "*", null, 1),
-                new Expr.Binary(new Expr.Literal(3), new Token(TokenType.PLUS, "+", null, 1), new Expr.Literal(4))
-            )
-        );
-        System.out.println(new AstPrinter().print(expression));
+        return builder.toString();
+    }
 
-        expression = new Expr.Call(
-            new Expr.Variable(new Token(TokenType.IDENTIFIER, "myVar", null, 1)),
-            new Token(TokenType.RIGHT_PAREN, ")", null, 1),
-            new ArrayList<Expr>() {{
-                add(new Expr.Binary(
-                    new Expr.Binary(new Expr.Literal(1), new Token(TokenType.PLUS, "+", null, 1), new Expr.Literal(2)),
-                    new Token(TokenType.STAR, "*", null, 1),
-                    new Expr.Binary(new Expr.Literal(3), new Token(TokenType.PLUS, "+", null, 1), new Expr.Literal(4))
-                ));
-            }}
-        );
-        System.out.println(new AstPrinter().print(expression));
+    private String parenthesize(String name, Token... tokens) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(").append(name);
+        for (Token token : tokens) {
+            builder.append(" ");
+            builder.append(token.lexeme);
+        }
+        builder.append(")");
+
+        return builder.toString();
+    }
+
+    private void niy(Expr expr) {
+        throw new RuntimeException("Expr: not implemented yet " + expr + ".");
+    }
+
+    private void niy(Stmt stmt) {
+        throw new RuntimeException("Stmt: not implemented yet " + stmt.getClass().getName() + ".");
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length > 1) {
+            System.out.println("Usage: jlox-ast [script]");
+        } else if (args.length == 1) {
+            String path = args[0];
+            Scanner scanner = new Scanner(System.err, new String(Files.readAllBytes(Paths.get(path)), Charset.defaultCharset()));
+            List<Token> tokens = scanner.scanTokens();
+
+            Parser parser = new Parser(System.err, tokens);
+            List<Stmt> statements = parser.parse();
+            for (Stmt stmt : statements) {
+                System.out.println(new AstPrinter().print(stmt));
+            }
+        }
     }
 
 }
