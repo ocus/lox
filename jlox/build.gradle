@@ -24,6 +24,11 @@ jar {
     }
 }
 
+run {
+    standardInput = System.in
+    standardOutput = System.out
+}
+
 //noinspection GroovyAssignabilityCheck
 task jlox(group: 'jlox', type: JavaExec) {
     standardInput = System.in
