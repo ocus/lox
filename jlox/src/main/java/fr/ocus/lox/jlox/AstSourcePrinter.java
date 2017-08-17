@@ -87,6 +87,16 @@ public class AstSourcePrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
     }
 
     @Override
+    public String visitIndexGetExpr(Expr.IndexGet expr) {
+        return null;
+    }
+
+    @Override
+    public String visitIndexSetExpr(Expr.IndexSet expr) {
+        return null;
+    }
+
+    @Override
     public String visitLiteralExpr(Expr.Literal expr) {
         if (expr.value instanceof String) {
             return "\"" + expr.value + "\"";

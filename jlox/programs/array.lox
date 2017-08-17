@@ -4,5 +4,17 @@ var one = [12];
 print one;
 class Bar {}
 class Foo < Bar {}
-var three = ["a", 42, false, Bar, Foo()];
+var three = ["a", 42, false, Bar, Foo(), nil];
 print three;
+three[0] = "b";
+var i = 0;
+while (i < 6) {
+    print three[i];
+    i = i + 1;
+}
+
+var string = "string";
+print string[2];
+// string[3] = "0";
+print string;
+

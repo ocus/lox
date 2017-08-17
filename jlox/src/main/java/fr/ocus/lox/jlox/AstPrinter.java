@@ -90,6 +90,16 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
     }
 
     @Override
+    public String visitIndexGetExpr(Expr.IndexGet expr) {
+        return parenthesize("index-get", expr.object, expr.index);
+    }
+
+    @Override
+    public String visitIndexSetExpr(Expr.IndexSet expr) {
+        return parenthesize("index-set", expr.object, expr.index, expr.value);
+    }
+
+    @Override
     public String visitLiteralExpr(Expr.Literal expr) {
         if (expr.value == null) return "nil";
         if (expr.value instanceof String) return "\"" + expr.value + "\"";

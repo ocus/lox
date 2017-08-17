@@ -68,8 +68,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             for (Stmt statement : statements) {
                 execute(statement);
             }
-        }
-        catch (Return error) {
+        } catch (Return error) {
             JLox.error(errorStream, new Token(TokenType.RETURN, "return", null, -1), "Cannot return from top-level code.");
         } catch (RuntimeError error) {
             JLox.runtimeError(errorStream, error);
@@ -175,6 +174,49 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitIndexGetExpr(Expr.IndexGet expr) {
+        Object index = expr.index.accept(this);
+        if (!(index instanceof Double)) {
+            throw new RuntimeException(); // not a number
+        }
+        double doubleIndex = (double) index;
+        if ((doubleIndex != Math.floor(doubleIndex)) || Double.isInfinite(doubleIndex)) {
+            throw new RuntimeException(); // not a whole number
+        }
+        Object object = expr.object.accept(this);
+        if (object instanceof List) {
+            return ((List) object).get((int) doubleIndex);
+        }
+        else if (object instanceof String) {
+            return ((String) object).charAt((int) doubleIndex);
+        }
+        throw new RuntimeException(); // not a list
+    }
+
+    @Override
+    public Object visitIndexSetExpr(Expr.IndexSet expr) {
+        Object index = expr.index.accept(this);
+        if (!(index instanceof Double)) {
+            throw new RuntimeException(); // not a number
+        }
+        double doubleIndex = (double) index;
+        if ((doubleIndex != Math.floor(doubleIndex)) || Double.isInfinite(doubleIndex)) {
+            throw new RuntimeException(); // not a whole number
+        }
+        Object object = expr.object.accept(this);
+        if (object instanceof List) {
+            ((List) object).set((int) doubleIndex, expr.value.accept(this));
+        }
+        else if (object instanceof String) {
+            throw new RuntimeException(); // hmmm strings are immutable
+        }
+        else {
+            throw new RuntimeException(); // not a list nor a string
+        }
+        return null;
+    }
+
+    @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
         Object left = evaluate(expr.left);
 
@@ -239,8 +281,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitArrayExpr(Expr.Array expr) {
-        niy(expr);
-        return null;
+        List<Object> array = new ArrayList<>(expr.elements.size());
+        for (Expr element : expr.elements) {
+            array.add(element.accept(this));
+        }
+        return array;
     }
 
     @Override
