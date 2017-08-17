@@ -24,29 +24,18 @@ jar {
     }
 }
 
-////noinspection GroovyAssignabilityCheck
-//task jloxMain(group: 'jlox', type: JavaExec) {
-//    main = 'fr.ocus.lox.jlox.JLox'
-//    classpath = sourceSets.main.runtimeClasspath
-//    args = [file]
-//}
-//jloxMain.dependsOn classes
-
 //noinspection GroovyAssignabilityCheck
-//task jlox(group: 'jlox', type: JavaExec) {
-//    main = '-jar'
-//    args = [
-//            jar.archivePath,
-//            file
-//    ]
-//}
-//jlox.dependsOn jar
-
-//test {
-//    filter {
-//        includeTestsMatching "*Test"
-//    }
-//}
+task jlox(group: 'jlox', type: JavaExec) {
+    standardInput = System.in
+    def arguments = []
+    arguments.add(jar.archivePath)
+    if (project.hasProperty("file")) {
+        arguments.add(project.getProperty("file"))
+    }
+    main = '-jar'
+    args = arguments
+}
+jlox.dependsOn jar
 
 /**
  * Tool tasks
@@ -67,6 +56,7 @@ task generateInterpreterTests(group: 'tool', type: JavaExec) {
 }
 
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
+
 task wrapper(type: Wrapper) {
     gradleVersion = '4.0'
     distributionType = DistributionType.ALL

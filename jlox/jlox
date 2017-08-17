@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+ARGS=""
+if [ "-" != "-$@" ] ; then ARGS="-Pfile=$@"; fi
+
+./gradlew --console=plain -q ${ARGS} clean jlox
