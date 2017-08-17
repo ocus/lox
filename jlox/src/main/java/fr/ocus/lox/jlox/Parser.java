@@ -461,6 +461,9 @@ public class Parser {
             List<Expr> elements = new ArrayList<>();
             while (!check(RIGHT_BRACKET) && !isAtEnd()) {
                 elements.add(expression());
+                if (!check(RIGHT_BRACKET)) {
+                    consume(COMMA, "Expect ',' after array element.");
+                }
             }
             consume(RIGHT_BRACKET, "Expect ']' after expression.");
             return new Expr.Array(elements);

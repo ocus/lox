@@ -2,3 +2,7 @@ var empty = [];
 print empty;
 var one = [12];
 print one;
+class Bar {}
+class Foo < Bar {}
+var three = ["a", 42, false, Bar, Foo()];
+print three;

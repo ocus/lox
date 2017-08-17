@@ -22,7 +22,7 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
 
     @Override
     public String visitArrayExpr(Expr.Array expr) {
-        throw new RuntimeException("Not implemented yet");
+        return parenthesize("array", expr.elements.toArray(new Expr[]{}));
     }
 
     @Override
@@ -118,8 +118,7 @@ public class AstPrinter implements Expr.Visitor<String>, Stmt.Visitor<String> {
         builder.append("(class ");
         builder.append(stmt.name.lexeme);
         if (stmt.superclass != null) {
-            builder.append(" ");
-            builder.append("<<");
+            builder.append(" < ");
             builder.append(stmt.superclass.accept(this));
         }
         if (!stmt.methods.isEmpty()) {
