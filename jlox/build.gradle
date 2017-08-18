@@ -42,6 +42,20 @@ task jlox(group: 'jlox', type: JavaExec) {
 }
 jlox.dependsOn jar
 
+//noinspection GroovyAssignabilityCheck
+task jloxAst(group: 'jlox', type: JavaExec) {
+    standardInput = System.in
+    def arguments = []
+    arguments.add(jar.archivePath)
+    arguments.add('fr.ocus.lox.jlox.AstPrinter')
+    if (project.hasProperty("file")) {
+        arguments.add(project.getProperty("file"))
+    }
+    main = '-cp'
+    args = arguments
+}
+jloxAst.dependsOn jar
+
 /**
  * Tool tasks
  **/

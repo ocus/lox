@@ -150,6 +150,6 @@ public class InterpreterConstructorTest {
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
-        assertThat(err[0], containsString("Error at 'return': Cannot return a value from an initializer."));
+        assertThat(err[0], containsString("Error at 'return': Cannot return value from an initializer."));
     }
 }

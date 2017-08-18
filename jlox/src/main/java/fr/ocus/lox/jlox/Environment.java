@@ -34,12 +34,8 @@ public class Environment {
         return allValues;
     }
 
-    boolean define(String name, Object value) {
-        if (values.containsKey(name)) {
-            return false;
-        }
+    void define(String name, Object value) {
         values.put(name, value);
-        return true;
     }
 
     void assign(Token name, Object value) {
@@ -66,6 +62,15 @@ public class Environment {
         throw new RuntimeError(name, "Undefined variable '" + name.lexeme + "'.");
     }
 
+    void assignAt(int distance, Token name, Object value) {
+        Environment environment = this;
+        for (int i = 0; i < distance; i++) {
+            environment = environment.enclosing;
+        }
+
+        environment.values.put(name.lexeme, value);
+    }
+
     Object getAt(int distance, String name) {
         Environment environment = this;
         for (int i = 0; i < distance; i++) {
@@ -73,5 +78,15 @@ public class Environment {
         }
 
         return environment.values.get(name);
+    }
+
+    @Override
+    public String toString() {
+        String result = values.toString();
+        if (enclosing != null) {
+            result += " -> " + enclosing.toString();
+        }
+
+        return result;
     }
 }

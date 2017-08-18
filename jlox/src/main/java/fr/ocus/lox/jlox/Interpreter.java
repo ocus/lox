@@ -12,9 +12,10 @@ import java.util.Map;
  */
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
-    private Environment environment = globals;
+    private final Map<Expr, Integer> locals = new HashMap<>();
     private final PrintStream printStream;
     private final PrintStream errorStream;
+    private Environment environment = globals;
 
     Interpreter() {
         this(System.out, System.err);
@@ -39,10 +40,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return (double) System.currentTimeMillis() / 1000.0;
             }
         });
-        globals.define("dump_env", new LoxCallable() {
+        globals.define("get_env", new LoxCallable() {
             @Override
             public String toString() {
-                return "<fn:lox dump_env>";
+                return "<fn:lox get_env>";
             }
 
             @Override
@@ -52,13 +53,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
             @Override
             public Object call(Interpreter interpreter, List<Object> arguments) {
-                Map<String, Object> values = interpreter.environment.getAllValues();
-                print("Env dump start: (", values.size(), ")\n");
-                for (String name : values.keySet()) {
-                    print("- ", name, " = ", values.get(name), "\n");
-                }
-                print("Env dump end\n");
-                return null;
+                return environment;
             }
         });
     }
@@ -68,12 +63,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             for (Stmt statement : statements) {
                 execute(statement);
             }
-        }
-        catch (Return error) {
-            JLox.error(errorStream, new Token(TokenType.RETURN, "return", null, -1), "Cannot return from top-level code.");
+        } catch (StackOverflowError error) {
+            JLox.runtimeError(errorStream, new RuntimeError(new Token(TokenType.EOF, "", "", -1), "Stack overflow."));
         } catch (RuntimeError error) {
             JLox.runtimeError(errorStream, error);
         }
+    }
+
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+
+        Integer distance = locals.get(expr);
+        if (distance != null) {
+            environment.assignAt(distance, expr.name, value);
+        } else {
+            environment.assign(expr.name, value);
+        }
+        return value;
     }
 
     @Override
@@ -125,21 +132,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
-    public Void visitFunctionStmt(Stmt.Function stmt) {
-        LoxFunction function = new LoxFunction(stmt, environment, false);
-        environment.define(stmt.name.lexeme, function);
-        return null;
-    }
-
-    @Override
-    public Void visitReturnStmt(Stmt.Return stmt) {
-        Object value = null;
-        if (stmt.value != null) value = evaluate(stmt.value);
-
-        throw new Return(value);
-    }
-
-    @Override
     public Object visitCallExpr(Expr.Call expr) {
         Object callee = evaluate(expr.callee);
 
@@ -175,6 +167,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitLiteralExpr(Expr.Literal expr) {
+        return expr.value;
+    }
+
+    @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
         Object left = evaluate(expr.left);
 
@@ -207,13 +204,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitSuperExpr(Expr.Super expr) {
-//        throw new RuntimeException("Not implemented yet");
-        return null;
-    }
-
-    @Override
-    public Object visitLiteralExpr(Expr.Literal expr) {
-        return expr.value;
+        int distance = locals.get(expr);
+        LoxClass superclass = (LoxClass) environment.getAt(distance, "super");
+        LoxInstance receiver = (LoxInstance) environment.getAt(distance - 1, "this");
+        LoxFunction method = superclass.findMethod(receiver, expr.method.lexeme);
+        if (method == null) {
+            throw new RuntimeError(expr.method, "Undefined property '" + expr.method.lexeme + "'.");
+        }
+        return method;
     }
 
     @Override
@@ -234,65 +232,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
-        return environment.get(expr.name);
-    }
-
-    @Override
-    public Object visitAssignExpr(Expr.Assign expr) {
-        Object value = evaluate(expr.value);
-
-        environment.assign(expr.name, value);
-        return value;
-    }
-
-    @Override
-    public Void visitExpressionStmt(Stmt.Expression stmt) {
-        evaluate(stmt.expression);
-        return null;
-    }
-
-    @Override
-    public Void visitIfStmt(Stmt.If stmt) {
-        if (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.thenBranch);
-        } else if (stmt.elseBranch != null) {
-            execute(stmt.elseBranch);
-        }
-        return null;
-    }
-
-    @Override
-    public Void visitPrintStmt(Stmt.Print stmt) {
-        Object value = evaluate(stmt.expression);
-        print(value, "\n"); // platform-independent newline
-        return null;
+        return lookUpVariable(expr.name, expr);
     }
 
     private void print(Object... values) {
         for (Object value : values) {
             printStream.print(stringify(value));
         }
-    }
-
-    @Override
-    public Void visitWhileStmt(Stmt.While stmt) {
-        while (isTruthy(evaluate(stmt.condition))) {
-            execute(stmt.body);
-        }
-        return null;
-    }
-
-    @Override
-    public Void visitVarStmt(Stmt.Var stmt) {
-        Object value = null;
-        if (stmt.initializer != null) {
-            value = evaluate(stmt.initializer);
-        }
-
-        if (!environment.define(stmt.name.lexeme, value)) {
-            JLox.error(errorStream, stmt.name, "Variable with this name already declared in this scope.");
-        }
-        return null;
     }
 
     @Override
@@ -329,6 +275,63 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        LoxFunction function = new LoxFunction(stmt, environment, false);
+        environment.define(stmt.name.lexeme, function);
+        return null;
+    }
+
+    @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        if (isTruthy(evaluate(stmt.condition))) {
+            execute(stmt.thenBranch);
+        } else if (stmt.elseBranch != null) {
+            execute(stmt.elseBranch);
+        }
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        print(value, "\n"); // platform-independent newline
+        return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+        if (stmt.initializer != null) {
+            value = evaluate(stmt.initializer);
+        }
+
+        environment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Void visitReturnStmt(Stmt.Return stmt) {
+        Object value = null;
+        if (stmt.value != null) value = evaluate(stmt.value);
+
+        throw new Return(value);
+    }
+
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt) {
+        while (isTruthy(evaluate(stmt.condition))) {
+            execute(stmt.body);
+        }
+        return null;
+    }
+
     private void execute(Stmt stmt) {
         stmt.accept(this);
     }
@@ -346,8 +349,20 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
+    void resolve(Expr expr, int depth) {
+        locals.put(expr, depth);
+    }
+
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private Object lookUpVariable(Token name, Expr expr) {
+        Integer distance = locals.get(expr);
+        if (distance != null) {
+            return environment.getAt(distance, name.lexeme);
+        }
+        return globals.get(name);
     }
 
     private void checkNumberOperand(Token operator, Object operand) {
