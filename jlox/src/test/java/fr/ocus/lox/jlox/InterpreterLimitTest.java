@@ -16,10 +16,10 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-@Ignore
 public class InterpreterLimitTest {
 
     @Test
+    @Ignore
     public void testLoopTooLarge() {
         Path file = Paths.get("src", "test", "resources", "programs", "limit", "loop_too_large.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -48,6 +48,7 @@ public class InterpreterLimitTest {
     }
 
     @Test
+    @Ignore
     public void testStackOverflow() {
         Path file = Paths.get("src", "test", "resources", "programs", "limit", "stack_overflow.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -63,6 +64,7 @@ public class InterpreterLimitTest {
     }
 
     @Test
+    @Ignore
     public void testTooManyConstants() {
         Path file = Paths.get("src", "test", "resources", "programs", "limit", "too_many_constants.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -77,6 +79,7 @@ public class InterpreterLimitTest {
     }
 
     @Test
+    @Ignore
     public void testTooManyLocals() {
         Path file = Paths.get("src", "test", "resources", "programs", "limit", "too_many_locals.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -91,6 +94,7 @@ public class InterpreterLimitTest {
     }
 
     @Test
+    @Ignore
     public void testTooManyUpvalues() {
         Path file = Paths.get("src", "test", "resources", "programs", "limit", "too_many_upvalues.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);

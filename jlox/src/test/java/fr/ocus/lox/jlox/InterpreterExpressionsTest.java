@@ -16,10 +16,10 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-@Ignore
 public class InterpreterExpressionsTest {
 
     @Test
+    @Ignore
     public void testEvaluate() {
         Path file = Paths.get("src", "test", "resources", "programs", "expressions", "evaluate.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -34,6 +34,7 @@ public class InterpreterExpressionsTest {
     }
 
     @Test
+    @Ignore
     public void testParse() {
         Path file = Paths.get("src", "test", "resources", "programs", "expressions", "parse.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
