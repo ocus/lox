@@ -1,0 +1,7 @@
+fun factorial(n) {
+  if (n == 0) return 1;
+  return n * factorial(n - 1);
+}
+for (var n = 0; n < 10; n = n + 1) {
+    print n + "! = " + factorial(n);
+}

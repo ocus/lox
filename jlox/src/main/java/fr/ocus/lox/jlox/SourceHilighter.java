@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Matthieu Honel <matthieu.honel@vectaury.io>
  * @since 2017-08-11
  */
-public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<String> {
+public class SourceHilighter implements Stmt.Visitor<String>, Expr.Visitor<String> {
     List<String> print(List<Stmt> stmts) {
         List<String> prints = new ArrayList<>(stmts.size());
         for (Stmt stmt : stmts) {
@@ -308,13 +308,12 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
 
             Parser parser = new Parser(System.err, tokens);
             List<Stmt> statements = parser.parse();
-            AstSourceHtmlPrinter printer = new AstSourceHtmlPrinter();
+            SourceHilighter printer = new SourceHilighter();
             return Arrays.stream(printer.print(statements).toArray(new String[0]))
                 .collect(Collectors.joining(""));
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return null;
         }
         return null;
@@ -337,9 +336,7 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         return files;
     }
 
-    public static void main(String[] args) {
-        List<Path> programs = getLoxFiles(Paths.get("src","test","resources","programs"));
-
+    private static String htmlHead() {
         StringBuilder preHtml = new StringBuilder();
         preHtml.append("<html>");
         preHtml.append("<head>");
@@ -374,17 +371,33 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
         preHtml.append("</style>");
         preHtml.append("</head>");
         preHtml.append("<body>");
-        System.out.println(preHtml.toString());
-        for (Path program : programs) {
-            String programStr = programToString(program);
-            if (programStr == null) {
-                continue;
-            }
-            StringBuilder builder = new StringBuilder();
-            builder.append(wrap("h1", "program-file", program.toString()));
-            builder.append(wrap("div", "program-code", programStr));
-            System.out.println(wrap("div", "program", builder.toString()));
+        return preHtml.toString();
+    }
+
+    private static String htmlFoot() {
+        return "</body></html>";
+    }
+
+    private static String hilightFile(Path path) {
+        String programStr = programToString(path);
+        StringBuilder builder = new StringBuilder();
+        builder.append(htmlHead());
+        if (programStr != null) {
+            StringBuilder builderProgram = new StringBuilder();
+            builderProgram.append(wrap("h1", "program-file", path.toString()));
+            builderProgram.append(wrap("div", "program-code", programStr));
+            builder.append(wrap("div", "program", builderProgram.toString()));
         }
-        System.out.println("</body></html>");
+        builder.append(htmlFoot());
+        return builder.toString();
+    }
+
+    public static void main(String[] args) {
+        if (args.length != 1) {
+            System.err.println("Usage: jlox-hilight [script]");
+            System.exit(1);
+        }
+        String path = args[0];
+        System.out.println(hilightFile(Paths.get(path)));
     }
 }
