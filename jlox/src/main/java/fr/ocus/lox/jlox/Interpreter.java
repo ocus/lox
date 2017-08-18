@@ -93,12 +93,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left - (double) right;
             case PLUS:
-                if (left instanceof Double && right instanceof Double) {
+                boolean isLeftDouble = left instanceof Double;
+                boolean isRightDouble = right instanceof Double;
+                if (isLeftDouble && isRightDouble) {
                     return (double) left + (double) right;
                 }
 
-                if (left instanceof String && right instanceof String) {
+                boolean isLeftString = left instanceof String;
+                boolean isRightString = right instanceof String;
+                if (isLeftString && isRightString) {
                     return (String) left + right;
+                }
+
+                if (isLeftDouble && isRightString) {
+                    return (double) left + (String) right;
+                }
+
+                if (isLeftString && isRightDouble) {
+                    return (String) left + (double) right;
                 }
 
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
