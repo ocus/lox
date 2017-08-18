@@ -157,6 +157,11 @@ public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<
     }
 
     @Override
+    public String visitBreakStmt(Stmt.Break stmt) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public String visitClassStmt(Stmt.Class stmt) {
         return null;
     }

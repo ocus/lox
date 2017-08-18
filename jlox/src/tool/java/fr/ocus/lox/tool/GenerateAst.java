@@ -42,6 +42,7 @@ public class GenerateAst {
         // statements
         defineAst(outputDir, "Stmt", Collections.singletonList("java.util.List"), Arrays.asList(
             "Block      : List<Stmt> statements",
+            "Break      : Token keyword",
             "Class      : Token name, Expr superclass, List<Stmt.Function> methods",
             "Expression : Expr expression",
             "Function   : Token name, List<Token> parameters, List<Stmt> body",

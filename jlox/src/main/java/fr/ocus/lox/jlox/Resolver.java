@@ -28,8 +28,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         SUPERCLASS
     }
 
+    enum LoopType {
+        NONE,
+    }
+
     private FunctionType currentFunction = FunctionType.NONE;
     private ClassType currentClass = ClassType.NONE;
+    private LoopType currentLoop = LoopType.NONE;
 
 
     Resolver(PrintStream errorStream, Interpreter interpreter) {
@@ -134,6 +139,15 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         beginScope();
         resolve(stmt.statements);
         endScope();
+        return null;
+    }
+
+    @Override
+    public Void visitBreakStmt(Stmt.Break stmt) {
+        if (currentLoop == LoopType.NONE) {
+            JLox.error(errorStream, stmt.keyword, "Cannot use 'break' outside of a loop.");
+        }
+//        throw new RuntimeException("Not implemented yet");
         return null;
     }
 

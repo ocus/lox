@@ -9,6 +9,7 @@ import java.util.Map;
 import static fr.ocus.lox.jlox.TokenType.AND;
 import static fr.ocus.lox.jlox.TokenType.BANG;
 import static fr.ocus.lox.jlox.TokenType.BANG_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.BREAK;
 import static fr.ocus.lox.jlox.TokenType.CLASS;
 import static fr.ocus.lox.jlox.TokenType.COMMA;
 import static fr.ocus.lox.jlox.TokenType.DOT;
@@ -211,6 +212,7 @@ class Scanner {
         keywords = new HashMap<>();
         /* @formatter:off */
         keywords.put("and",    AND);
+        keywords.put("break",  BREAK);
         keywords.put("class",  CLASS);
         keywords.put("else",   ELSE);
         keywords.put("false",  FALSE);

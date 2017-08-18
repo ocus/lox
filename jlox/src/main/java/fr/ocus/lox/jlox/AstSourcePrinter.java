@@ -131,6 +131,11 @@ public class AstSourcePrinter implements Stmt.Visitor<String>, Expr.Visitor<Stri
     }
 
     @Override
+    public String visitBreakStmt(Stmt.Break stmt) {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
     public String visitClassStmt(Stmt.Class stmt) {
         return null;
     }

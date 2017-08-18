@@ -8,6 +8,7 @@ import java.util.List;
 import static fr.ocus.lox.jlox.TokenType.AND;
 import static fr.ocus.lox.jlox.TokenType.BANG;
 import static fr.ocus.lox.jlox.TokenType.BANG_EQUAL;
+import static fr.ocus.lox.jlox.TokenType.BREAK;
 import static fr.ocus.lox.jlox.TokenType.CLASS;
 import static fr.ocus.lox.jlox.TokenType.COMMA;
 import static fr.ocus.lox.jlox.TokenType.DOT;
@@ -226,6 +227,7 @@ public class Parser {
         if (match(FOR)) return forStatement();
         if (match(IF)) return ifStatement();
         if (match(PRINT)) return printStatement();
+        if (match(BREAK)) return breakStatement();
         if (match(RETURN)) return returnStatement();
         if (match(WHILE)) return whileStatement();
         if (match(LEFT_BRACE)) return new Stmt.Block(block());
@@ -301,6 +303,13 @@ public class Parser {
 
         consume(SEMICOLON, "Expect ';' after return value.");
         return new Stmt.Return(keyword, value);
+    }
+
+    private Stmt breakStatement() {
+        Token keyword = previous();
+
+        consume(SEMICOLON, "Expect ';' after break.");
+        return new Stmt.Break(keyword);
     }
 
     private Stmt whileStatement() {
