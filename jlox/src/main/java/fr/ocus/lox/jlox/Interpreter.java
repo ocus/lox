@@ -13,6 +13,7 @@ import java.util.Map;
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     private Environment environment = globals;
+    private final Map<Expr, Integer> locals = new HashMap<>();
     private final PrintStream printStream;
     private final PrintStream errorStream;
 
@@ -68,8 +69,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             for (Stmt statement : statements) {
                 execute(statement);
             }
-        } catch (Return error) {
-            JLox.error(errorStream, new Token(TokenType.RETURN, "return", null, -1), "Cannot return from top-level code.");
+        } catch (StackOverflowError error) {
+            JLox.runtimeError(errorStream, new RuntimeError(new Token(TokenType.EOF, "", "", -1), "Stack overflow."));
         } catch (RuntimeError error) {
             JLox.runtimeError(errorStream, error);
         }
@@ -249,8 +250,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitSuperExpr(Expr.Super expr) {
-        niy(expr);
-        return null;
+        int distance = locals.get(expr);
+        LoxClass superclass = (LoxClass) environment.getAt(distance, "super");
+        LoxInstance receiver = (LoxInstance) environment.getAt(distance - 1, "this");
+        LoxFunction method = superclass.findMethod(receiver, expr.method.lexeme);
+        if (method == null) {
+            throw new RuntimeError(expr.method, "Undefined property '" + expr.method.lexeme + "'.");
+        }
+        return method;
     }
 
     @Override
@@ -276,7 +283,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitVariableExpr(Expr.Variable expr) {
-        return environment.get(expr.name);
+        return lookUpVariable(expr.name, expr);
     }
 
     @Override
@@ -292,7 +299,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);
 
-        environment.assign(expr.name, value);
+        Integer distance = locals.get(expr);
+        if (distance != null) {
+            environment.assignAt(distance, expr.name, value);
+        } else {
+            environment.assign(expr.name, value);
+        }
         return value;
     }
 
@@ -340,9 +352,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             value = evaluate(stmt.initializer);
         }
 
-        if (!environment.define(stmt.name.lexeme, value)) {
-            JLox.error(errorStream, stmt.name, "Variable with this name already declared in this scope.");
-        }
+        environment.define(stmt.name.lexeme, value);
         return null;
     }
 
@@ -397,8 +407,20 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
     }
 
+    void resolve(Expr expr, int depth) {
+        locals.put(expr, depth);
+    }
+
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private Object lookUpVariable(Token name, Expr expr) {
+        Integer distance = locals.get(expr);
+        if (distance != null) {
+            return environment.getAt(distance, name.lexeme);
+        }
+        return globals.get(name);
     }
 
     private void checkNumberOperand(Token operator, Object operand) {

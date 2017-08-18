@@ -16,10 +16,10 @@ import static org.junit.Assert.assertEquals;
  * @author Matthieu Honel <ocus51@gmail.com>
  * @since 2017-08-04
  */
-@Ignore
 public class InterpreterScanningTest {
 
     @Test
+    @Ignore
     public void testIdentifiers() {
         Path file = Paths.get("src", "test", "resources", "programs", "scanning", "identifiers.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -42,6 +42,7 @@ public class InterpreterScanningTest {
     }
 
     @Test
+    @Ignore
     public void testKeywords() {
         Path file = Paths.get("src", "test", "resources", "programs", "scanning", "keywords.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -71,6 +72,7 @@ public class InterpreterScanningTest {
     }
 
     @Test
+    @Ignore
     public void testNumbers() {
         Path file = Paths.get("src", "test", "resources", "programs", "scanning", "numbers.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -91,6 +93,7 @@ public class InterpreterScanningTest {
     }
 
     @Test
+    @Ignore
     public void testPunctuators() {
         Path file = Paths.get("src", "test", "resources", "programs", "scanning", "punctuators.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -123,6 +126,7 @@ public class InterpreterScanningTest {
     }
 
     @Test
+    @Ignore
     public void testStrings() {
         Path file = Paths.get("src", "test", "resources", "programs", "scanning", "strings.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -139,6 +143,7 @@ public class InterpreterScanningTest {
     }
 
     @Test
+    @Ignore
     public void testWhitespace() {
         Path file = Paths.get("src", "test", "resources", "programs", "scanning", "whitespace.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);

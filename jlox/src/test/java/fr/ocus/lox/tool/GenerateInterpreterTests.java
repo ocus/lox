@@ -20,21 +20,30 @@ public class GenerateInterpreterTests {
     private static Pattern STACK_TRACE_RE = Pattern.compile("\\[line (\\d+)\\]");
     private static Pattern NONTEST_RE = Pattern.compile("// nontest");
     private static final PathMatcher loxMatcher = FileSystems.getDefault().getPathMatcher("glob:**.lox");
-    private static List<String> DISABLED_DIRECTORIES = new ArrayList<>();
+    private static List<String> DISABLED_TESTS = new ArrayList<>();
 
     static {
-        DISABLED_DIRECTORIES.add("benchmark");
-//        DISABLED_DIRECTORIES.add("class");
-//        DISABLED_DIRECTORIES.add("closure");
-//        DISABLED_DIRECTORIES.add("constructor");
-        DISABLED_DIRECTORIES.add("expressions");
-//        DISABLED_DIRECTORIES.add("field");
-        DISABLED_DIRECTORIES.add("inheritance");
-        DISABLED_DIRECTORIES.add("limit");
-//        DISABLED_DIRECTORIES.add("method");
-        DISABLED_DIRECTORIES.add("scanning");
-//        DISABLED_DIRECTORIES.add("super");
-//        DISABLED_DIRECTORIES.add("this");
+        DISABLED_TESTS.add("benchmark/binary_trees");
+        DISABLED_TESTS.add("benchmark/equality");
+        DISABLED_TESTS.add("benchmark/fib");
+        DISABLED_TESTS.add("benchmark/invocation");
+        DISABLED_TESTS.add("benchmark/method_call");
+        DISABLED_TESTS.add("benchmark/properties");
+        DISABLED_TESTS.add("benchmark/string_equality");
+        DISABLED_TESTS.add("expressions/evaluate");
+        DISABLED_TESTS.add("expressions/parse");
+        DISABLED_TESTS.add("limit/loop_too_large");
+        DISABLED_TESTS.add("limit/stack_overflow");
+        DISABLED_TESTS.add("limit/too_many_constants");
+        DISABLED_TESTS.add("limit/too_many_locals");
+        DISABLED_TESTS.add("limit/too_many_upvalues");
+        DISABLED_TESTS.add("scanning/identifiers");
+        DISABLED_TESTS.add("scanning/keywords");
+        DISABLED_TESTS.add("scanning/numbers");
+        DISABLED_TESTS.add("scanning/punctuators");
+        DISABLED_TESTS.add("scanning/strings");
+        DISABLED_TESTS.add("scanning/whitespace");
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -114,10 +123,16 @@ public class GenerateInterpreterTests {
         Path outputFile = Paths.get(outputDir, "Interpreter" + camelCaseGroupName + "Test.java");
         PrintWriter writer = new PrintWriter(outputFile.toAbsolutePath().toString(), "UTF-8");
 
-        boolean ignored = DISABLED_DIRECTORIES.contains(groupName);
+        boolean hasIgnored = false;
+        for (Path file : files) {
+            Path relative = baseDir.relativize(file);
+            Path fileName = relative.getFileName();
+            String baseName = fileName.toString().replaceAll(".lox", "");
+            hasIgnored |= DISABLED_TESTS.contains(groupName + "/" + baseName);
+        }
         writer.println("package fr.ocus.lox.jlox;");
         writer.println("");
-        if (ignored) {
+        if (hasIgnored) {
             writer.println("import org.junit.Ignore;");
         }
         writer.println("import org.junit.Test;");
@@ -135,9 +150,6 @@ public class GenerateInterpreterTests {
         writer.println(" * @author Matthieu Honel <ocus51@gmail.com>");
         writer.println(" * @since 2017-08-04");
         writer.println(" */");
-        if (ignored) {
-            writer.println("@Ignore");
-        }
         writer.println("public class Interpreter" + camelCaseGroupName + "Test {");
 
         for (Path file : files) {
@@ -150,6 +162,9 @@ public class GenerateInterpreterTests {
 
             writer.println("");
             writer.println("    @Test");
+            if (DISABLED_TESTS.contains(groupName + "/" + baseName)) {
+                writer.println("    @Ignore");
+            }
             writer.println("    public void " + testName + "() {");
             writer.println("        Path file = " + toPathsGetString(file) + ";");
             writer.println("        InterpreterTestHelper helper = new InterpreterTestHelper(file);");
@@ -159,7 +174,6 @@ public class GenerateInterpreterTests {
             writer.println("        System.err.println(file + \" :: OUT: \" + Arrays.toString(out));");
             writer.println("        System.err.println(file + \" :: ERR: \" + Arrays.toString(err));");
             List<String> lines = Files.readAllLines(file);
-            int outputExpectIndex = 0;
             List<String> outputExpect = new ArrayList<>();
             List<String> errorExpect = new ArrayList<>();
             for (int l = 0; l < lines.size(); l++) {
@@ -167,8 +181,6 @@ public class GenerateInterpreterTests {
                 Matcher mOutputExpect = OUTPUT_EXPECT.matcher(line);
                 if (mOutputExpect.find()) {
                     outputExpect.add(mOutputExpect.group(1));
-//                    writer.println("        assertEquals(\"" + mOutputExpect.group(1).replaceAll("\"", "\\\\\"") + "\", out[" + outputExpectIndex + "]);");
-//                    outputExpectIndex++;
                 }
                 Matcher mErrorExpect = ERROR_EXPECT.matcher(line);
                 if (mErrorExpect.find()) {
