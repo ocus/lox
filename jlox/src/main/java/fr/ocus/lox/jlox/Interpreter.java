@@ -40,10 +40,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return (double) System.currentTimeMillis() / 1000.0;
             }
         });
-        globals.define("dump_env", new LoxCallable() {
+        globals.define("get_env", new LoxCallable() {
             @Override
             public String toString() {
-                return "<fn:lox dump_env>";
+                return "<fn:lox get_env>";
             }
 
             @Override
@@ -53,13 +53,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
             @Override
             public Object call(Interpreter interpreter, List<Object> arguments) {
-                Map<String, Object> values = interpreter.environment.getAllValues();
-                print("Env dump start: (", values.size(), ")\n");
-                for (String name : values.keySet()) {
-                    print("- ", name, " = ", values.get(name), "\n");
-                }
-                print("Env dump end\n");
-                return null;
+                return environment;
             }
         });
     }
