@@ -29,6 +29,8 @@ run {
     standardOutput = System.out
 }
 
+// TODO: use startScripts from application plugin ?
+
 //noinspection GroovyAssignabilityCheck
 task jlox(group: 'jlox', type: JavaExec) {
     standardInput = System.in
@@ -55,6 +57,22 @@ task jloxAst(group: 'jlox', type: JavaExec) {
     args = arguments
 }
 jloxAst.dependsOn jar
+
+//noinspection GroovyAssignabilityCheck
+task jloxHilight(group: 'jlox', type: JavaExec) {
+    outputs.upToDateWhen {false}
+    standardInput = System.in
+    standardOutput = System.out
+    def arguments = []
+    arguments.add(jar.archivePath)
+    arguments.add('fr.ocus.lox.jlox.SourceHilighter')
+    if (project.hasProperty("file")) {
+        arguments.add(project.getProperty("file"))
+    }
+    main = '-cp'
+    args = arguments
+}
+jloxHilight.dependsOn jar
 
 /**
  * Tool tasks
