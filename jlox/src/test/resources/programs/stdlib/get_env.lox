@@ -1,0 +1,2 @@
+print get_env; // expect: <fn:lox get_env>
+get_env();

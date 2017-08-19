@@ -50,6 +50,20 @@ public class InterpreterClosureTest {
     }
 
     @Test
+    public void testClosedClosureInFunction() {
+        Path file = Paths.get("src", "test", "resources", "programs", "closure", "closed_closure_in_function.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(1, out.length);
+        assertEquals("local", out[0]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
     public void testCloseOverFunctionParameter() {
         Path file = Paths.get("src", "test", "resources", "programs", "closure", "close_over_function_parameter.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);
@@ -89,20 +103,6 @@ public class InterpreterClosureTest {
         System.err.println(file + " :: ERR: " + Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("param", out[0]);
-        assertArrayEquals(new String[]{""}, err);
-    }
-
-    @Test
-    public void testClosedClosureInFunction() {
-        Path file = Paths.get("src", "test", "resources", "programs", "closure", "closed_closure_in_function.lox");
-        InterpreterTestHelper helper = new InterpreterTestHelper(file);
-        helper.run();
-        String[] out = helper.getOutput();
-        String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
-        assertEquals(1, out.length);
-        assertEquals("local", out[0]);
         assertArrayEquals(new String[]{""}, err);
     }
 

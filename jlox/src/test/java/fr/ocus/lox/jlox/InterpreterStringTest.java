@@ -18,6 +18,25 @@ import static org.junit.Assert.assertEquals;
 public class InterpreterStringTest {
 
     @Test
+    public void testConcatenation() {
+        Path file = Paths.get("src", "test", "resources", "programs", "string", "concatenation.lox");
+        InterpreterTestHelper helper = new InterpreterTestHelper(file);
+        helper.run();
+        String[] out = helper.getOutput();
+        String[] err = helper.getError();
+        System.err.println(file + " :: OUT: " + Arrays.toString(out));
+        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        assertEquals(6, out.length);
+        assertEquals("ab", out[0]);
+        assertEquals("c1.23", out[1]);
+        assertEquals("4.56d", out[2]);
+        assertEquals("e4.123456789012345", out[3]);
+        assertEquals("2112", out[4]);
+        assertEquals("202030", out[5]);
+        assertArrayEquals(new String[]{""}, err);
+    }
+
+    @Test
     public void testErrorAfterMultiline() {
         Path file = Paths.get("src", "test", "resources", "programs", "string", "error_after_multiline.lox");
         InterpreterTestHelper helper = new InterpreterTestHelper(file);

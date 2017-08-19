@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private final PrintStream printStream;
     private final PrintStream errorStream;
     private Environment environment = globals;
+
+    private static final NumberFormat NUMBER_FORMAT = new DecimalFormat("##.###############");
 
     Interpreter() {
         this(System.out, System.err);
@@ -106,11 +110,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if (isLeftDouble && isRightString) {
-                    return (double) left + (String) right;
+                    return NUMBER_FORMAT.format(left) + right;
                 }
 
                 if (isLeftString && isRightDouble) {
-                    return (String) left + (double) right;
+                    return left + NUMBER_FORMAT.format(right);
                 }
 
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");

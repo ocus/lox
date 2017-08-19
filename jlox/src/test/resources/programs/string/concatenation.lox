@@ -1,0 +1,6 @@
+print "a" + "b"; // expect: ab
+print "c" + 1.23; // expect: c1.23
+print 4.56 + "d"; // expect: 4.56d
+print "e" + 4.123456789012345; // expect: e4.123456789012345
+print 10 + 11 + "12"; // expect: 2112
+print "20" + 20 + 30; // expect: 202030
