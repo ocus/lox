@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterStringTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterStringTest.class.getName());
 
     @Test
     public void testConcatenation() {
@@ -24,8 +27,8 @@ public class InterpreterStringTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(6, out.length);
         assertEquals("ab", out[0]);
         assertEquals("c1.23", out[1]);
@@ -43,8 +46,8 @@ public class InterpreterStringTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Undefined variable 'err'."));
@@ -58,8 +61,8 @@ public class InterpreterStringTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(3, out.length);
         assertEquals("()", out[0]);
         assertEquals("a string", out[1]);
@@ -74,8 +77,8 @@ public class InterpreterStringTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(3, out.length);
         assertEquals("1", out[0]);
         assertEquals("2", out[1]);
@@ -90,8 +93,8 @@ public class InterpreterStringTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error: Unterminated string."));

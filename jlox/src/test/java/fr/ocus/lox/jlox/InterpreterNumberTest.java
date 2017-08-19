@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterNumberTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterNumberTest.class.getName());
 
     @Test
     public void testDecimalPointAtEof() {
@@ -24,8 +27,8 @@ public class InterpreterNumberTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at end: Expect property name after '.'."));
@@ -38,8 +41,8 @@ public class InterpreterNumberTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at '.': Expect expression."));
@@ -52,8 +55,8 @@ public class InterpreterNumberTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(6, out.length);
         assertEquals("123", out[0]);
         assertEquals("987654", out[1]);
@@ -71,8 +74,8 @@ public class InterpreterNumberTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at ';': Expect property name after '.'."));

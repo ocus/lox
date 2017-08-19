@@ -136,6 +136,8 @@ public class GenerateInterpreterTests {
             writer.println("import org.junit.Ignore;");
         }
         writer.println("import org.junit.Test;");
+        writer.println("import org.slf4j.Logger;");
+        writer.println("import org.slf4j.LoggerFactory;");
         writer.println("");
         writer.println("import java.nio.file.Path;");
         writer.println("import java.nio.file.Paths;");
@@ -151,6 +153,7 @@ public class GenerateInterpreterTests {
         writer.println(" * @since 2017-08-04");
         writer.println(" */");
         writer.println("public class Interpreter" + camelCaseGroupName + "Test {");
+        writer.println("    private static final Logger LOGGER = LoggerFactory.getLogger(Interpreter" + camelCaseGroupName + "Test.class.getName());");
 
         for (Path file : files) {
             Path relative = baseDir.relativize(file);
@@ -171,8 +174,8 @@ public class GenerateInterpreterTests {
             writer.println("        helper.run();");
             writer.println("        String[] out = helper.getOutput();");
             writer.println("        String[] err = helper.getError();");
-            writer.println("        System.err.println(file + \" :: OUT: \" + Arrays.toString(out));");
-            writer.println("        System.err.println(file + \" :: ERR: \" + Arrays.toString(err));");
+            writer.println("        LOGGER.debug(\"{} :: OUT :: {}\", file, Arrays.toString(out));");
+            writer.println("        LOGGER.debug(\"{} :: ERR :: {}\", file, Arrays.toString(err));");
             List<String> lines = Files.readAllLines(file);
             List<String> outputExpect = new ArrayList<>();
             List<String> errorExpect = new ArrayList<>();
@@ -217,8 +220,7 @@ public class GenerateInterpreterTests {
             }
             if (outputExpect.size() == 0) {
                 writer.println("        assertArrayEquals(new String[]{\"\"}, out);");
-            }
-            else {
+            } else {
                 writer.println("        assertEquals(" + outputExpect.size() + ", out.length);");
                 for (int i = 0; i < outputExpect.size(); i++) {
                     writer.println("        assertEquals(\"" + outputExpect.get(i).replaceAll("\"", "\\\\\"") + "\", out[" + i + "]);");

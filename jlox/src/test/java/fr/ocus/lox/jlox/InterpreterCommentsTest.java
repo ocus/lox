@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterCommentsTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterCommentsTest.class.getName());
 
     @Test
     public void testLineAtEof() {
@@ -24,8 +27,8 @@ public class InterpreterCommentsTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("ok", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -38,8 +41,8 @@ public class InterpreterCommentsTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -51,8 +54,8 @@ public class InterpreterCommentsTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertArrayEquals(new String[]{""}, err);
     }
@@ -64,8 +67,8 @@ public class InterpreterCommentsTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("ok", out[0]);
         assertArrayEquals(new String[]{""}, err);

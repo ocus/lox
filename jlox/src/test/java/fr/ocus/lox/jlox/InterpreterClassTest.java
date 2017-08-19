@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterClassTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterClassTest.class.getName());
 
     @Test
     public void testEmpty() {
@@ -24,8 +27,8 @@ public class InterpreterClassTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -38,8 +41,8 @@ public class InterpreterClassTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(3, out.length);
         assertEquals("in foo", out[0]);
         assertEquals("in bar", out[1]);
@@ -54,8 +57,8 @@ public class InterpreterClassTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -68,8 +71,8 @@ public class InterpreterClassTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("Foo", out[0]);
         assertArrayEquals(new String[]{""}, err);

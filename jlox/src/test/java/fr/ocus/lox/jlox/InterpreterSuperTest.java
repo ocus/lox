@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterSuperTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterSuperTest.class.getName());
 
     @Test
     public void testBoundMethod() {
@@ -24,8 +27,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("A.method(arg)", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -38,8 +41,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("Derived.bar()", out[0]);
         assertEquals("Base.foo()", out[1]);
@@ -53,8 +56,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("Derived.foo()", out[0]);
         assertEquals("Base.foo()", out[1]);
@@ -68,8 +71,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("Base", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -82,8 +85,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("Derived.init()", out[0]);
         assertEquals("Base.init(a, b)", out[1]);
@@ -97,8 +100,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("Derived.foo()", out[0]);
         assertEquals(2, err.length);
@@ -113,8 +116,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("C.foo()", out[0]);
         assertEquals("A.foo()", out[1]);
@@ -128,8 +131,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Expected 2 arguments but got 1."));
@@ -143,8 +146,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at 'super': Cannot use 'super' in a class with no superclass."));
@@ -157,8 +160,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at 'super': Cannot use 'super' in a class with no superclass."));
@@ -171,8 +174,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Undefined property 'doesNotExist'."));
@@ -186,8 +189,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at ')': Expect '.' after 'super'."));
@@ -200,8 +203,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("Base.method()", out[0]);
         assertEquals("Base.method()", out[1]);
@@ -215,8 +218,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Error at 'super': Cannot use 'super' outside of a class."));
@@ -230,8 +233,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("A", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -244,8 +247,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(1, out.length);
         assertEquals("A", out[0]);
         assertArrayEquals(new String[]{""}, err);
@@ -258,8 +261,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at 'super': Cannot use 'super' outside of a class."));
@@ -272,8 +275,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at ';': Expect '.' after 'super'."));
@@ -286,8 +289,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(1, err.length);
         assertThat(err[0], containsString("Error at ';': Expect superclass method name."));
@@ -300,8 +303,8 @@ public class InterpreterSuperTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("a", out[0]);
         assertEquals("b", out[1]);

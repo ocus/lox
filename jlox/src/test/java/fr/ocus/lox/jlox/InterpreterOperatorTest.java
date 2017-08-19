@@ -1,6 +1,8 @@
 package fr.ocus.lox.jlox;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterOperatorTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterOperatorTest.class.getName());
 
     @Test
     public void testAdd() {
@@ -24,8 +27,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("579", out[0]);
         assertEquals("string", out[1]);
@@ -39,8 +42,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be two numbers or two strings."));
@@ -54,8 +57,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be two numbers or two strings."));
@@ -69,8 +72,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be two numbers or two strings."));
@@ -84,8 +87,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be two numbers or two strings."));
@@ -99,8 +102,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be two numbers or two strings."));
@@ -114,8 +117,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be two numbers or two strings."));
@@ -129,8 +132,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(20, out.length);
         assertEquals("true", out[0]);
         assertEquals("false", out[1]);
@@ -162,8 +165,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("4", out[0]);
         assertEquals("1", out[1]);
@@ -177,8 +180,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -192,8 +195,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -207,8 +210,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(10, out.length);
         assertEquals("true", out[0]);
         assertEquals("true", out[1]);
@@ -230,8 +233,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("true", out[0]);
         assertEquals("false", out[1]);
@@ -245,8 +248,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -260,8 +263,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -275,8 +278,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -290,8 +293,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -305,8 +308,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -320,8 +323,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -335,8 +338,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -350,8 +353,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -365,8 +368,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("15", out[0]);
         assertEquals("3.702", out[1]);
@@ -380,8 +383,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -395,8 +398,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -410,8 +413,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(3, out.length);
         assertEquals("-3", out[0]);
         assertEquals("3", out[1]);
@@ -426,8 +429,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operand must be a number."));
@@ -441,8 +444,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(8, out.length);
         assertEquals("false", out[0]);
         assertEquals("true", out[1]);
@@ -462,8 +465,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("false", out[0]);
         assertEquals("false", out[1]);
@@ -477,8 +480,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(10, out.length);
         assertEquals("false", out[0]);
         assertEquals("false", out[1]);
@@ -500,8 +503,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(2, out.length);
         assertEquals("1", out[0]);
         assertEquals("0", out[1]);
@@ -515,8 +518,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));
@@ -530,8 +533,8 @@ public class InterpreterOperatorTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertArrayEquals(new String[]{""}, out);
         assertEquals(2, err.length);
         assertThat(err[0], containsString("Operands must be numbers."));

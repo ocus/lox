@@ -2,6 +2,8 @@ package fr.ocus.lox.jlox;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,6 +19,7 @@ import static org.junit.Assert.assertEquals;
  * @since 2017-08-04
  */
 public class InterpreterScanningTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InterpreterScanningTest.class.getName());
 
     @Test
     @Ignore
@@ -26,8 +29,8 @@ public class InterpreterScanningTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(9, out.length);
         assertEquals("IDENTIFIER andy null", out[0]);
         assertEquals("IDENTIFIER formless null", out[1]);
@@ -49,8 +52,8 @@ public class InterpreterScanningTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(16, out.length);
         assertEquals("AND and null", out[0]);
         assertEquals("CLASS class null", out[1]);
@@ -79,8 +82,8 @@ public class InterpreterScanningTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(7, out.length);
         assertEquals("NUMBER 123 123.0", out[0]);
         assertEquals("NUMBER 123.456 123.456", out[1]);
@@ -100,8 +103,8 @@ public class InterpreterScanningTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(19, out.length);
         assertEquals("LEFT_PAREN ( null", out[0]);
         assertEquals("RIGHT_PAREN ) null", out[1]);
@@ -133,8 +136,8 @@ public class InterpreterScanningTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(3, out.length);
         assertEquals("STRING \"\" ", out[0]);
         assertEquals("STRING \"string\" string", out[1]);
@@ -150,8 +153,8 @@ public class InterpreterScanningTest {
         helper.run();
         String[] out = helper.getOutput();
         String[] err = helper.getError();
-        System.err.println(file + " :: OUT: " + Arrays.toString(out));
-        System.err.println(file + " :: ERR: " + Arrays.toString(err));
+        LOGGER.debug("{} :: OUT :: {}", file, Arrays.toString(out));
+        LOGGER.debug("{} :: ERR :: {}", file, Arrays.toString(err));
         assertEquals(5, out.length);
         assertEquals("IDENTIFIER space null", out[0]);
         assertEquals("IDENTIFIER tabs null", out[1]);
