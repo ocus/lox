@@ -19,21 +19,6 @@ public class Environment {
         this.enclosing = enclosing;
     }
 
-    Map<String, Object> getValues() {
-        return values;
-    }
-
-    Map<String, Object> getAllValues() {
-        Map<String, Object> allValues = new HashMap<>();
-        Environment environment = this;
-        do {
-            allValues.putAll(environment.values);
-            environment = environment.enclosing;
-        } while (environment != null);
-
-        return allValues;
-    }
-
     void define(String name, Object value) {
         values.put(name, value);
     }
