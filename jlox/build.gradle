@@ -1,6 +1,7 @@
 apply plugin: 'idea'
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'jacoco'
 
 sourceSets {
     tool
@@ -27,6 +28,15 @@ jar {
 run {
     standardInput = System.in
     standardOutput = System.out
+}
+
+test.finalizedBy jacocoTestReport
+jacocoTestReport {
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/Ast*Printer.*', '**/SourceHilighter.*'])
+        })
+    }
 }
 
 // TODO: use startScripts from application plugin ?
@@ -60,7 +70,7 @@ jloxAst.dependsOn jar
 
 //noinspection GroovyAssignabilityCheck
 task jloxHilight(group: 'jlox', type: JavaExec) {
-    outputs.upToDateWhen {false}
+    outputs.upToDateWhen { false }
     standardInput = System.in
     standardOutput = System.out
     def arguments = []
