@@ -1,3 +1,4 @@
+import time
 from typing import Any, Dict, List
 
 from .callable import LoxCallable, LoxClass, LoxFunction, LoxInstance, Return
@@ -11,11 +12,40 @@ from .stmt import AbstractStmt, StmtBlock, StmtClass, StmtExpression, StmtFuncti
 from .token import Token, TokenType
 
 
+class StdClock(LoxCallable):
+    def call(self, interpreter: InterpreterInterface, arguments: List[Any]):
+        return time.time()
+
+    def arity(self) -> int:
+        return 0
+
+    def __str__(self):
+        return '<fn:lox clock>'
+
+
+class StdGetEnv(LoxCallable):
+    def __init__(self, environment):
+        super(StdGetEnv, self).__init__()
+        self._environment = environment
+
+    def call(self, interpreter: InterpreterInterface, arguments: List[Any]):
+        return self._environment
+
+    def arity(self) -> int:
+        return 0
+
+    def __str__(self):
+        return '<fn:lox get_env>'
+
+
 class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visitor):
     def __init__(self):
         self.globals = Environment()
         self._environment = self.globals
         self._locals = {}  # type: Dict[AbstractExpr, int]
+
+        self.globals.define('clock', StdClock())
+        self.globals.define('get_env', StdGetEnv(environment=self._environment))
 
     def interpret(self, statements: List[AbstractStmt]):
         for statement in statements:
