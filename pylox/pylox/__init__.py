@@ -1,7 +1,8 @@
-from .resolver import Resolver
+from .error import PyLoxRuntimeError
 from .interface import InterpreterInterface
 from .interpreter import Interpreter
 from .parser import Parser
+from .resolver import Resolver
 from .scanner import Scanner
 from .token import Token, TokenType
 
@@ -34,15 +35,23 @@ class PyLox(object):
     @staticmethod
     def run_file(file_path):
         with open(file=file_path, mode='r') as f:
-            PyLox._run(interpreter=Interpreter(), code=f.read())
+            try:
+                PyLox._run(interpreter=Interpreter(), code=f.read())
+            except (PyLoxRuntimeError, Exception) as e:
+                print(e)
 
     @staticmethod
     def run_prompt():
+        print('PyLox', __version__)
+        interpreter = Interpreter()
         while True:
             line = input('$ ')
             if not line:
                 break
-            PyLox._run(interpreter=Interpreter(), code=line)
+            try:
+                PyLox._run(interpreter=interpreter, code=line)
+            except (PyLoxRuntimeError, Exception) as e:
+                print(e)
 
     @staticmethod
     def error(line, message):

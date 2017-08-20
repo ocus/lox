@@ -8,7 +8,7 @@ class PyLoxRuntimeError(RuntimeError):
         self.message = message
 
     def __str__(self):
-        return 'PyLoxRuntimeError at \'' + self.token.lexeme + '\' [line ' + self.token.line + ']: ' + self.message
+        return 'PyLoxRuntimeError at \'' + self.token.lexeme + '\' [line ' + str(self.token.line) + ']: ' + self.message
 
 
 class PyLoxNotImplementedError(NotImplementedError):
