@@ -1,0 +1,8 @@
+*.pyc
+build
+venv
+*.egg*
+.cache
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries
