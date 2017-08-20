@@ -19,10 +19,8 @@ class Parser(ParserInterface):
 
     def parse(self) -> List[AbstractStmt]:
         statements = []  # type: List[AbstractStmt]
-        limiter = 0
-        while not self._is_at_end() and limiter < 100:
+        while not self._is_at_end():
             statements.append(self._declaration())
-            limiter += 1
         return statements
 
     def _declaration(self):
