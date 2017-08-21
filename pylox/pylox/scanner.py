@@ -146,7 +146,7 @@ class Scanner(ScannerInterface):
 
     @staticmethod
     def _is_alpha(c):
-        return c.isalpha()
+        return c.isalpha() or '_' == c
 
     def _is_alpha_numeric(self, c):
         return self._is_alpha(c) or self._is_digit(c)

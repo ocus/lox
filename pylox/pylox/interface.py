@@ -52,3 +52,7 @@ class InterpreterInterface(ABC):
     @abstractmethod
     def resolve(self, expr: AbstractExpr, depth: int):
         pass
+
+    @abstractmethod
+    def get_env(self):
+        pass

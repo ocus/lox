@@ -24,12 +24,11 @@ class StdClock(LoxCallable):
 
 
 class StdGetEnv(LoxCallable):
-    def __init__(self, environment):
+    def __init__(self):
         super(StdGetEnv, self).__init__()
-        self._environment = environment
 
     def call(self, interpreter: InterpreterInterface, arguments: List[Any]):
-        return self._environment
+        return interpreter.get_env()
 
     def arity(self) -> int:
         return 0
@@ -45,7 +44,10 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
         self._locals = {}  # type: Dict[AbstractExpr, int]
 
         self.globals.define('clock', StdClock())
-        self.globals.define('get_env', StdGetEnv(environment=self._environment))
+        self.globals.define('get_env', StdGetEnv())
+
+    def get_env(self):
+        return self._environment
 
     def interpret(self, statements: List[AbstractStmt]):
         for statement in statements:

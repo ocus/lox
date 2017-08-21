@@ -6,7 +6,7 @@ from .resolver import Resolver
 from .scanner import Scanner
 from .token import Token, TokenType
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 class PyLox(object):
