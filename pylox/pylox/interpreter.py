@@ -338,3 +338,31 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
             return text
 
         return str(obj)
+
+
+class DebuggerWrapper(object):
+    def __init__(self, obj):
+        self.obj = obj
+        self.callable_results = []
+
+    def __getattr__(self, attr):
+        print("Getting {0}.{1}".format(type(self.obj).__name__, attr))
+        ret = getattr(self.obj, attr)
+        if hasattr(ret, "__call__"):
+            return self.FunctionWrapper(self, ret)
+        return ret
+
+    class FunctionWrapper(object):
+        def __init__(self, parent, callable):
+            self.parent = parent
+            self.callable = callable
+
+        def __call__(self, *args, **kwargs):
+            print("Calling {0}.{1}".format(type(self.parent.obj).__name__, self.callable.__name__))
+            ret = self.callable(*args, **kwargs)
+            self.parent.callable_results.append(ret)
+            return ret
+
+
+def debugger(interpreter: InterpreterInterface):
+    return DebuggerWrapper(interpreter)

@@ -13,7 +13,7 @@ class InterpreterTestHelper(object):
 
     def run(self):
         interpreter = Interpreter(out_file=self._out_file, error_file=self._error_file)
-        PyLox.run(interpreter, code=self._source, error_file=self._error_file)
+        PyLox.run(interpreter, code=self._source, error_file=self._error_file, debug=False)
 
     def get_output(self):
         return self._to_lines(value=self._out_file.getvalue())

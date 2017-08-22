@@ -2,7 +2,7 @@ import sys
 
 from .error import PyLoxRuntimeError
 from .interface import InterpreterInterface
-from .interpreter import Interpreter
+from .interpreter import Interpreter, debugger
 from .parser import Parser
 from .resolver import Resolver
 from .scanner import Scanner
@@ -16,8 +16,10 @@ class PyLox(object):
     _has_runtime_error = False
 
     @staticmethod
-    def run(interpreter: InterpreterInterface, code: str, error_file=sys.stderr):
+    def run(interpreter: InterpreterInterface, code: str, error_file=sys.stderr, debug=False):
         try:
+            if debug:
+                interpreter = debugger(interpreter=interpreter)
             PyLox._has_error = False
             pylox_scanner = Scanner(source=code, error_file=error_file)
             tokens = pylox_scanner.scan_tokens()
@@ -39,19 +41,19 @@ class PyLox(object):
             print(e, file=sys.stderr)
 
     @staticmethod
-    def run_file(file_path):
+    def run_file(file_path, debug=False):
         with open(file=file_path, mode='r') as f:
-            PyLox.run(interpreter=Interpreter(), code=f.read())
+            PyLox.run(interpreter=Interpreter(), code=f.read(), debug=debug)
 
     @staticmethod
-    def run_prompt():
+    def run_prompt(debug=False):
         print('PyLox', __version__)
         interpreter = Interpreter()
         while True:
             line = input('$ ')
             if not line:
                 break
-            PyLox.run(interpreter=interpreter, code=line)
+            PyLox.run(interpreter=interpreter, code=line, debug=debug)
 
     @staticmethod
     def error(line, message, error_file=sys.stderr):
