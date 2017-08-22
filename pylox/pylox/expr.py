@@ -167,4 +167,3 @@ class ExprVariable(AbstractExpr):
 
     def accept(self, visitor):
         return visitor.visit_variable_expr(expr=self)
-

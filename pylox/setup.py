@@ -44,6 +44,21 @@ class PyTest(TestCommand):
         sys.exit(errcode)
 
 
+class PyTestPep8(TestCommand):
+    def finalize_options(self):
+        TestCommand.finalize_options(self)
+        self.test_args = [
+            '--pep8',
+            'tests'
+        ]
+        self.test_suite = True
+
+    def run_tests(self):
+        import pytest
+        errcode = pytest.main(self.test_args)
+        sys.exit(errcode)
+
+
 setup(
     name='pylox',
     version=pylox.__version__,
@@ -51,7 +66,7 @@ setup(
     license='Apache Software License',
     author='Matthieu Honel',
     install_requires=[],
-    cmdclass={'test': PyTest},
+    cmdclass={'test': PyTest, 'pep8': PyTestPep8},
     author_email='ocus51@gmail.com.com',
     description='A Lox interpreter',
     long_description=long_description,
@@ -64,7 +79,7 @@ setup(
     include_package_data=True,
     platforms='any',
     # setup_requires=['pytest-runner'],
-    tests_require=['pytest', 'pytest-cov'],
+    tests_require=['pytest', 'pytest-cov', 'pytest-pep8'],
     test_suite='tests.test_*',
     classifiers=[
         'Programming Language :: Python',

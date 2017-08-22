@@ -222,8 +222,8 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
 
         if len(arguments) != callee.arity():
             raise PyLoxRuntimeError(token=expr.paren,
-                              message='Expected ' + str(callee.arity()) + ' arguments but got ' +
-                                      str(len(arguments)) + '.')
+                                    message='Expected ' + str(callee.arity()) + ' arguments but got ' +
+                                            str(len(arguments)) + '.')
         return callee.call(interpreter=self, arguments=arguments)
 
     def visit_get_expr(self, expr: ExprGet):

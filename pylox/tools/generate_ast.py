@@ -34,8 +34,8 @@ def define_ast(file_path, base_name, types, extra_head=None):
         code.append('        @abstractmethod')
         code.append(
             '        def visit_{1}_{0}(self, {0}: \'{2}{3}\'):'.format(base_name.lower(), class_name.lower(),
-                                                                         base_name,
-                                                                         class_name))
+                                                                       base_name,
+                                                                       class_name))
         code.append('            pass')
         code.append('')
     code.append('')
@@ -68,7 +68,7 @@ def define_ast(file_path, base_name, types, extra_head=None):
         code.append('')
 
     with open(file=file_path, mode='w') as f:
-        f.writelines('\n'.join(code))
+        f.writelines('\n'.join(code[:-1]))
 
     print('{} written.'.format(file_path))
 

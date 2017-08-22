@@ -103,4 +103,3 @@ class LoxInstance(object):
 
     def __str__(self):
         return str(self._cls) + ' instance'
-

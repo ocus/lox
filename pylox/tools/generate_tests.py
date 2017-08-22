@@ -55,7 +55,6 @@ def main(path):
     lox_groups = {}
     for root, dirs, files in os.walk(test_programs_path):
         for file in files:
-            a = file.endswith('empty_file.lox')
             if file.endswith('.lox'):
                 real_path = os.path.realpath(os.path.join(root, file))
                 relative_path = os.path.relpath(real_path, gen_path)

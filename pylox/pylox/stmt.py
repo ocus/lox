@@ -127,4 +127,3 @@ class StmtWhile(AbstractStmt):
 
     def accept(self, visitor):
         return visitor.visit_while_stmt(stmt=self)
-
