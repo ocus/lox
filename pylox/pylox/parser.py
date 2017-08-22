@@ -1,3 +1,4 @@
+import sys
 from typing import List
 
 from .expr import ExprAssign, ExprBinary, ExprCall, ExprGet, ExprGrouping, ExprLiteral, ExprLogical, ExprSet, \
@@ -8,14 +9,15 @@ from .stmt import AbstractStmt, StmtBlock, StmtClass, StmtExpression, StmtFuncti
 from .token import Token, TokenType
 
 
-class ParseError(RuntimeError):
+class ParseError(Exception):
     pass
 
 
 class Parser(ParserInterface):
-    def __init__(self, tokens: List[Token]):
+    def __init__(self, tokens: List[Token], error_file=sys.stderr):
         self._tokens = tokens
         self._current = 0
+        self._error_file = error_file
 
     def parse(self) -> List[AbstractStmt]:
         statements = []  # type: List[AbstractStmt]
@@ -38,41 +40,41 @@ class Parser(ParserInterface):
             return None
 
     def _class_declaration(self):
-        name = self._consume(TokenType.IDENTIFIER, "Expect class name.")
+        name = self._consume(TokenType.IDENTIFIER, 'Expect class name.')
         superclass = None
         if self._match(TokenType.LESS):
-            self._consume(TokenType.IDENTIFIER, "Expect superclass name.")
+            self._consume(TokenType.IDENTIFIER, 'Expect superclass name.')
             superclass = ExprVariable(self._previous())
-        self._consume(TokenType.LEFT_BRACE, "Expect '{' after class name.")
+        self._consume(TokenType.LEFT_BRACE, 'Expect \'{\' after class name.')
         methods = []
         while (not self._check(TokenType.RIGHT_BRACE)) and not self._is_at_end():
             methods.append(self._function_declaration('method'))
-        self._consume(TokenType.RIGHT_BRACE, "Expect '}' after class methods.")
+        self._consume(TokenType.RIGHT_BRACE, 'Expect \'}\' after class methods.')
 
         return StmtClass(name=name, superclass=superclass, methods=methods)
 
     def _function_declaration(self, kind: str):
-        name = self._consume(TokenType.IDENTIFIER, "Expect " + kind + " name.")
-        self._consume(TokenType.LEFT_PAREN, "Expect '(' after " + kind + " name.")
+        name = self._consume(TokenType.IDENTIFIER, 'Expect ' + kind + ' name.')
+        self._consume(TokenType.LEFT_PAREN, 'Expect \'(\' after ' + kind + ' name.')
         parameters = []
         if not self._check(TokenType.RIGHT_PAREN):
             while True:
                 if len(parameters) >= 8:
-                    self._error(self._peek(), "Cannot have more than 8 parameters.")
-                parameters.append(self._consume(TokenType.IDENTIFIER, "Expect parameter name."))
+                    self._error(token=self._peek(), message='Cannot have more than 8 parameters.')
+                parameters.append(self._consume(TokenType.IDENTIFIER, 'Expect parameter name.'))
                 if not self._match(TokenType.COMMA):
                     break
-        self._consume(TokenType.RIGHT_PAREN, "Expect ')' after parameters.")
-        self._consume(TokenType.LEFT_BRACE, "Expect '{' before " + kind + " body.")
+        self._consume(TokenType.RIGHT_PAREN, 'Expect \')\' after parameters.')
+        self._consume(TokenType.LEFT_BRACE, 'Expect \'{\' before ' + kind + ' body.')
         body = self._block()
         return StmtFunction(name=name, parameters=parameters, body=body)
 
     def _var_declaration(self):
-        name = self._consume(TokenType.IDENTIFIER, "Expect variable name.")
+        name = self._consume(TokenType.IDENTIFIER, 'Expect variable name.')
         initializer = None
         if self._match(TokenType.EQUAL):
             initializer = self._expression()
-        self._consume(TokenType.SEMICOLON, "Expect ';' after variable declaration.")
+        self._consume(TokenType.SEMICOLON, 'Expect \';\' after variable declaration.')
 
         return StmtVar(name=name, initializer=initializer)
 
@@ -93,9 +95,9 @@ class Parser(ParserInterface):
         return self._expression_statement()
 
     def _for_statement(self):
-        self._consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.")
+        self._consume(TokenType.LEFT_PAREN, 'Expect \'(\' after \'for\'.')
 
-        if self._match(TokenType.ELSE):
+        if self._match(TokenType.SEMICOLON):
             initializer = None
         elif self._match(TokenType.VAR):
             initializer = self._var_declaration()
@@ -105,12 +107,12 @@ class Parser(ParserInterface):
         condition = None
         if not self._check(TokenType.SEMICOLON):
             condition = self._expression()
-        self._consume(TokenType.SEMICOLON, "Expect ';' after loop condition.")
+        self._consume(TokenType.SEMICOLON, 'Expect \';\' after loop condition.')
 
         increment = None
         if not self._check(TokenType.RIGHT_PAREN):
             increment = self._expression()
-        self._consume(TokenType.RIGHT_PAREN, "Expect ')' after for clauses.")
+        self._consume(TokenType.RIGHT_PAREN, 'Expect \')\' after for clauses.')
 
         body = self._statement()
         if increment:
@@ -127,9 +129,9 @@ class Parser(ParserInterface):
         return body
 
     def _if_statement(self):
-        self._consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.")
+        self._consume(TokenType.LEFT_PAREN, 'Expect \'(\' after \'if\'.')
         condition = self._expression()
-        self._consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.")
+        self._consume(TokenType.RIGHT_PAREN, 'Expect \')\' after if condition.')
 
         then_branch = self._statement()
         else_branch = None
@@ -140,7 +142,7 @@ class Parser(ParserInterface):
 
     def _print_statement(self):
         value = self._expression()
-        self._consume(TokenType.SEMICOLON, "Expect ';' after value.")
+        self._consume(TokenType.SEMICOLON, 'Expect \';\' after value.')
         return StmtPrint(expression=value)
 
     def _return_statement(self):
@@ -148,21 +150,21 @@ class Parser(ParserInterface):
         value = None
         if not self._check(TokenType.SEMICOLON):
             value = self._expression()
-        self._consume(TokenType.SEMICOLON, "Expect ';' after return value.")
+        self._consume(TokenType.SEMICOLON, 'Expect \';\' after return value.')
 
         return StmtReturn(keyword=keyword, value=value)
 
     def _while_statement(self):
-        self._consume(TokenType.LEFT_PAREN, "Expect '(' after 'while'.")
+        self._consume(TokenType.LEFT_PAREN, 'Expect \'(\' after \'while\'.')
         condition = self._expression()
-        self._consume(TokenType.RIGHT_PAREN, "Expect ')' after condition.")
+        self._consume(TokenType.RIGHT_PAREN, 'Expect \')\' after condition.')
         body = self._statement()
 
         return StmtWhile(condition=condition, body=body)
 
     def _expression_statement(self):
         expr = self._expression()
-        self._consume(TokenType.SEMICOLON, "Expect ';' after expression.")
+        self._consume(TokenType.SEMICOLON, 'Expect \';\' after expression.')
         return StmtExpression(expression=expr)
 
     def _block(self):
@@ -170,7 +172,7 @@ class Parser(ParserInterface):
         while (not self._check(TokenType.RIGHT_BRACE)) and not self._is_at_end():
             statements.append(self._declaration())
 
-        self._consume(TokenType.RIGHT_BRACE, "Expect '}' after block.")
+        self._consume(TokenType.RIGHT_BRACE, 'Expect \'}\' after block.')
 
         return statements
 
@@ -189,7 +191,7 @@ class Parser(ParserInterface):
             elif isinstance(expr, ExprGet):
                 return ExprSet(object=expr.object, name=expr.name, value=value)
 
-            self._error(equals, "Invalid assignment target.")
+            self._error(token=equals, message='Invalid assignment target.')
 
         return expr
 
@@ -277,8 +279,8 @@ class Parser(ParserInterface):
 
         if self._match(TokenType.SUPER):
             keyword = self._previous()
-            self._consume(TokenType.DOT, "Expect '.' after 'super'.")
-            method = self._consume(TokenType.IDENTIFIER, "Expect superclass method name.")
+            self._consume(TokenType.DOT, 'Expect \'.\' after \'super\'.')
+            method = self._consume(TokenType.IDENTIFIER, 'Expect superclass method name.')
             return ExprSuper(keyword=keyword, method=method)
 
         if self._match(TokenType.THIS):
@@ -286,10 +288,10 @@ class Parser(ParserInterface):
 
         if self._match(TokenType.LEFT_PAREN):
             expr = self._expression()
-            self._consume(TokenType.RIGHT_PAREN, "Expect ')' after expression.")
+            self._consume(TokenType.RIGHT_PAREN, 'Expect \')\' after expression.')
             return ExprGrouping(expression=expr)
 
-        raise self._error(self._peek(), "Expect expression.")
+        raise self._error(token=self._peek(), message='Expect expression.')
 
     def _call(self):
         expr = self._primary()
@@ -298,7 +300,7 @@ class Parser(ParserInterface):
             if self._match(TokenType.LEFT_PAREN):
                 expr = self._finish_call(expr)
             elif self._match(TokenType.DOT):
-                name = self._consume(TokenType.IDENTIFIER, "Expect property name after '.'.")
+                name = self._consume(TokenType.IDENTIFIER, 'Expect property name after \'.\'.')
                 expr = ExprGet(object=expr, name=name)
             else:
                 break
@@ -310,11 +312,11 @@ class Parser(ParserInterface):
         if not self._check(TokenType.RIGHT_PAREN):
             while True:
                 if len(arguments) >= 8:
-                    self._error(self._peek(), "Cannot have more than 8 arguments.")
+                    self._error(token=self._peek(), message='Cannot have more than 8 arguments.')
                 arguments.append(self._expression())
                 if not self._match(TokenType.COMMA):
                     break
-        paren = self._consume(TokenType.RIGHT_PAREN, "Expect ')' after arguments.")
+        paren = self._consume(TokenType.RIGHT_PAREN, 'Expect \')\' after arguments.')
 
         return ExprCall(callee=callee, paren=paren, arguments=arguments)
 
@@ -333,7 +335,7 @@ class Parser(ParserInterface):
     def _consume(self, token_type, message):
         if self._check(token_type):
             return self._advance()
-        raise self._error(self._peek(), message)
+        raise self._error(token=self._peek(), message=message)
 
     def _previous(self):
         return self._tokens[self._current - 1]
@@ -368,8 +370,7 @@ class Parser(ParserInterface):
 
             self._advance()
 
-    @staticmethod
-    def _error(token, message):
+    def _error(self, token, message):
         from . import PyLox
-        PyLox.parse_error(token, message)
+        PyLox.parse_error(token=token, message=message, error_file=self._error_file)
         return ParseError()

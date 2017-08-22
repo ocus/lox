@@ -1,3 +1,4 @@
+import sys
 import time
 from typing import Any, Dict, List
 
@@ -38,7 +39,9 @@ class StdGetEnv(LoxCallable):
 
 
 class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visitor):
-    def __init__(self):
+    def __init__(self, out_file=sys.stdout, error_file=sys.stderr):
+        self._out_file = out_file
+        self._error_file = error_file
         self.globals = Environment()
         self._environment = self.globals
         self._locals = {}  # type: Dict[AbstractExpr, int]
@@ -50,8 +53,12 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
         return self._environment
 
     def interpret(self, statements: List[AbstractStmt]):
-        for statement in statements:
-            self._execute(statement=statement)
+        try:
+            for statement in statements:
+                self._execute(statement=statement)
+        except PyLoxRuntimeError as error:
+            from . import PyLox
+            PyLox.runtime_error(error=error, error_file=self._error_file)
 
     def execute_block(self, statements: List[AbstractStmt], environment: EnvironmentInterface):
         previous = self._environment
@@ -124,7 +131,7 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
 
     def visit_print_stmt(self, stmt: StmtPrint):
         value = self._evaluate(expr=stmt.expression)
-        print(value, end='\n')
+        print(self._stringify(obj=value), end='\n', file=self._out_file)
 
     def visit_var_stmt(self, stmt: StmtVar):
         value = None
@@ -201,7 +208,7 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
         if TokenType.EQUAL_EQUAL == expr.operator.type:
             return Interpreter._is_equal(a=left, b=right)
 
-        raise self._error(token=expr.operator, message='Unknown binary operator.')
+        raise PyLoxRuntimeError(token=expr.operator, message='Unknown binary operator.')
 
     def visit_call_expr(self, expr: ExprCall):
         callee = self._evaluate(expr=expr.callee)
@@ -211,12 +218,12 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
             arguments.append(self._evaluate(expr=argument))
 
         if not isinstance(callee, LoxCallable):
-            raise self._error(token=expr.paren, message='Can only call functions and classes.')
+            raise PyLoxRuntimeError(token=expr.paren, message='Can only call functions and classes.')
 
         if len(arguments) != callee.arity():
-            raise self._error(token=expr.paren,
-                              message='Expected ' + str(callee.arity()) + ' arguments but got ' + str(
-                                  len(arguments)) + '.')
+            raise PyLoxRuntimeError(token=expr.paren,
+                              message='Expected ' + str(callee.arity()) + ' arguments but got ' +
+                                      str(len(arguments)) + '.')
         return callee.call(interpreter=self, arguments=arguments)
 
     def visit_get_expr(self, expr: ExprGet):
@@ -224,7 +231,7 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
         if isinstance(object, LoxInstance):
             return object.get_property(token=expr.name)
 
-        raise self._error(token=expr.name, message='Only instances have properties.')
+        raise PyLoxRuntimeError(token=expr.name, message='Only instances have properties.')
 
     def visit_grouping_expr(self, expr: ExprGrouping):
         return self._evaluate(expr=expr.expression)
@@ -253,7 +260,7 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
             instance.fields[expr.name.lexeme] = value
             return value
 
-        raise self._error(token=expr.name, message='Only instances have fields.')
+        raise PyLoxRuntimeError(token=expr.name, message='Only instances have fields.')
 
     def visit_this_expr(self, expr: ExprThis):
         return self._environment.get(token=expr.keyword)
@@ -264,19 +271,19 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
         receiver = self._environment.get_at(distance=distance - 1, name='this')
         method = superclass.find_method(instance=receiver, name=expr.method.lexeme)
         if not method:
-            raise self._error(token=expr.method, message='Undefined property \'' + expr.method.lexeme + '\'.')
+            raise PyLoxRuntimeError(token=expr.method, message='Undefined property \'' + expr.method.lexeme + '\'.')
         return method
 
     def visit_unary_expr(self, expr: ExprUnary):
         right = self._evaluate(expr=expr.right)
 
         if TokenType.BANG == expr.operator.type:
-            return Interpreter._is_truthy(value=right)
+            return not Interpreter._is_truthy(value=right)
         if TokenType.MINUS == expr.operator.type:
             Interpreter._check_number_operand(operator=expr.operator, operand=right)
             return -right
 
-        raise self._error(token=expr.operator, message='Unknown unary operator.')
+        raise PyLoxRuntimeError(token=expr.operator, message='Unknown unary operator.')
 
     def visit_variable_expr(self, expr: ExprVariable):
         return self._look_up_variable(token=expr.name, expr=expr)
@@ -291,7 +298,7 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
 
     @staticmethod
     def _is_equal(a: Any, b: Any):
-        return a == b
+        return type(a) == type(b) and a == b
 
     @staticmethod
     def _is_float(value: Any):
@@ -320,6 +327,9 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
         if obj is None:
             return 'nil'
 
+        if isinstance(obj, bool):
+            return 'true' if obj else 'false'
+
         # HACK remove the ending .0 if necessary
         if Interpreter._is_float(value=obj):
             text = str(obj)
@@ -328,9 +338,3 @@ class Interpreter(InterpreterInterface, AbstractStmt.Visitor, AbstractExpr.Visit
             return text
 
         return str(obj)
-
-    @staticmethod
-    def _error(token, message):
-        from . import PyLox
-        PyLox.parse_error(token, message)
-        return PyLoxRuntimeError(token=token, message=message)

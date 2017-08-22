@@ -1,3 +1,4 @@
+import sys
 from typing import List
 
 from .interface import ScannerInterface
@@ -5,12 +6,13 @@ from .token import Token, TokenType
 
 
 class Scanner(ScannerInterface):
-    def __init__(self, source: str):
+    def __init__(self, source: str, error_file=sys.stderr):
         self._source = source
         self._tokens = []  # type: List[Token]
         self._start = 0
         self._current = 0
         self._line = 1
+        self._error_file = error_file
 
     def scan_tokens(self) -> List[Token]:
         while not self._is_at_end():
@@ -72,7 +74,7 @@ class Scanner(ScannerInterface):
                 self._identifier()
             else:
                 from pylox import PyLox
-                PyLox.error(self._line, 'Unexpected character.')
+                PyLox.error(line=self._line, message='Unexpected character.', error_file=self._error_file)
 
     def _add_token(self, token_type, literal=None):
         text = self._source[self._start:self._current]
@@ -110,7 +112,7 @@ class Scanner(ScannerInterface):
         # Unterminated string
         if self._is_at_end():
             from pylox import PyLox
-            PyLox.error(self._line, "Unterminated string.")
+            PyLox.error(line=self._line, message='Unterminated string.', error_file=self._error_file)
 
         # the closing "
         self._advance()

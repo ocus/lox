@@ -1,9 +1,9 @@
 from .token import Token
 
 
-class PyLoxRuntimeError(RuntimeError):
+class PyLoxRuntimeError(Exception):
     def __init__(self, token: Token, message: str):
-        super(PyLoxRuntimeError, self).__init__()
+        super(PyLoxRuntimeError, self).__init__(message)
         self.token = token
         self.message = message
 

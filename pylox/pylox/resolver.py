@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 from typing import Dict, List
 
@@ -24,11 +25,12 @@ class _ClassType(Enum):
 
 
 class Resolver(AbstractStmt.Visitor, AbstractExpr.Visitor):
-    def __init__(self, interpreter: InterpreterInterface):
+    def __init__(self, interpreter: InterpreterInterface, error_file=sys.stderr):
         self._interpreter = interpreter
         self._current_function = _FunctionType.NONE  # type: _FunctionType
         self._current_class = _ClassType.NONE  # type: _ClassType
         self._scopes = _Scopes()  # type: _Scopes(List[Dict(str, bool)])
+        self._error_file = error_file
 
     def resolve(self, statements: List[AbstractStmt]):
         for statement in statements:
@@ -41,7 +43,8 @@ class Resolver(AbstractStmt.Visitor, AbstractExpr.Visitor):
         expr.accept(visitor=self)
 
     def _resolve_local(self, expr: AbstractExpr, token: Token):
-        for i, scope in enumerate(self._scopes):
+        for i in range(len(self._scopes) - 1, -1, -1):
+            scope = self._scopes[i]
             if token.lexeme in scope:
                 self._interpreter.resolve(expr=expr, depth=len(self._scopes) - 1 - i)
                 return
@@ -66,7 +69,9 @@ class Resolver(AbstractStmt.Visitor, AbstractExpr.Visitor):
 
         scope = self._scopes.peek()  # type:
         if token.lexeme in scope:
-            self._error(token=token, message='Variable with this name already declared in this scope.')
+            self._error(token=token,
+                        message='Variable with this name already declared in this scope.',
+                        error_file=self._error_file)
 
         scope[token.lexeme] = False
 
@@ -141,10 +146,12 @@ class Resolver(AbstractStmt.Visitor, AbstractExpr.Visitor):
 
     def visit_return_stmt(self, stmt: StmtReturn):
         if self._current_function == _FunctionType.NONE:
-            self._error(token=stmt.keyword, message='Cannot return from top-level code.')
+            self._error(token=stmt.keyword, message='Cannot return from top-level code.', error_file=self._error_file)
         if stmt.value is not None:
             if self._current_function == _FunctionType.INITIALIZER:
-                self._error(token=stmt.keyword, message='Cannot return value from an initializer.')
+                self._error(token=stmt.keyword,
+                            message='Cannot return value from an initializer.',
+                            error_file=self._error_file)
             self._resolve_expression(expr=stmt.value)
 
     def visit_while_stmt(self, stmt: StmtWhile):
@@ -183,15 +190,21 @@ class Resolver(AbstractStmt.Visitor, AbstractExpr.Visitor):
 
     def visit_this_expr(self, expr: ExprThis):
         if self._current_class == _ClassType.NONE:
-            self._error(token=expr.keyword, message='Cannot use \'this\' outside of a class.')
+            self._error(token=expr.keyword,
+                        message='Cannot use \'this\' outside of a class.',
+                        error_file=self._error_file)
         else:
             self._resolve_local(expr=expr, token=expr.keyword)
 
     def visit_super_expr(self, expr: ExprSuper):
         if self._current_class == _ClassType.NONE:
-            self._error(token=expr.keyword, message='Cannot use \'super\' outside of a class.')
+            self._error(token=expr.keyword,
+                        message='Cannot use \'super\' outside of a class.',
+                        error_file=self._error_file)
         elif self._current_class != _ClassType.SUPERCLASS:
-            self._error(token=expr.keyword, message='Cannot use \'super\' in a class with no superclass.')
+            self._error(token=expr.keyword,
+                        message='Cannot use \'super\' in a class with no superclass.',
+                        error_file=self._error_file)
         else:
             self._resolve_local(expr=expr, token=expr.keyword)
 
@@ -202,14 +215,16 @@ class Resolver(AbstractStmt.Visitor, AbstractExpr.Visitor):
         if self._scopes:
             scope = self._scopes.peek()
             if expr.name.lexeme in scope and not scope[expr.name.lexeme]:
-                self._error(token=expr.name, message='"Cannot read local variable in its own initializer.')
+                self._error(token=expr.name,
+                            message='Cannot read local variable in its own initializer.',
+                            error_file=self._error_file)
 
         self._resolve_local(expr=expr, token=expr.name)
 
     @staticmethod
-    def _error(token, message):
+    def _error(token, message, error_file):
         from . import PyLox
-        PyLox.parse_error(token, message)
+        PyLox.parse_error(token=token, message=message, error_file=error_file)
         return PyLoxRuntimeError(token=token, message=message)
 
 

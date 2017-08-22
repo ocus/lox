@@ -5,4 +5,6 @@ venv
 .cache
 .idea/**/workspace.xml
 .idea/**/tasks.xml
+.idea/**/vcs.xml
 .idea/dictionaries
+.coverage

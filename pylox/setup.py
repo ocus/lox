@@ -1,9 +1,11 @@
 from __future__ import print_function
-from setuptools import setup
-from setuptools.command.test import test as TestCommand
+
 import io
 import os
 import sys
+
+from setuptools import setup
+from setuptools.command.test import test as TestCommand
 
 import pylox
 
@@ -26,7 +28,14 @@ long_description = read('README.txt')
 class PyTest(TestCommand):
     def finalize_options(self):
         TestCommand.finalize_options(self)
-        self.test_args = []
+        self.test_args = [
+            '--strict',
+            '--verbose',
+            '--tb=long',
+            '--cov=pylox',
+            '--cov-report=html:build/htmlcov',
+            'tests'
+        ]
         self.test_suite = True
 
     def run_tests(self):
@@ -41,7 +50,6 @@ setup(
     url='http://github.com/ocus/lox/',
     license='Apache Software License',
     author='Matthieu Honel',
-    tests_require=['pytest', 'pytest-cov'],
     install_requires=[],
     cmdclass={'test': PyTest},
     author_email='ocus51@gmail.com.com',
@@ -55,7 +63,9 @@ setup(
     },
     include_package_data=True,
     platforms='any',
-    test_suite='tests.test_pylox',
+    # setup_requires=['pytest-runner'],
+    tests_require=['pytest', 'pytest-cov'],
+    test_suite='tests.test_*',
     classifiers=[
         'Programming Language :: Python',
         'Development Status :: 4 - Beta',
