@@ -85,7 +85,8 @@ def main(path):
             'from tests import InterpreterTestHelper',
             ''
         ]
-        for file in group['files']:
+        group_files = sorted(group['files'], key=lambda f: f['real_path'])
+        for file in group_files:
             disabled = file['path_parts'][-2:] in DISABLED_TESTS
             if disabled:
                 print('! Disabling', file['name'], 'in', group_test_path)

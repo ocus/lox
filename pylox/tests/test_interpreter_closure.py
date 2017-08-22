@@ -35,20 +35,6 @@ def test_assign_to_shadowed_later():
     assert [''] == err
 
 
-def test_closed_closure_in_function():
-    helper = InterpreterTestHelper(
-        source_file=os.path.join(
-            '..', 'jlox', 'src', 'test', 'resources', 'programs', 'closure', 'closed_closure_in_function.lox'
-        )
-    )
-    helper.run()
-    out = helper.get_output()
-    err = helper.get_error()
-    assert 1 == len(out)
-    assert 'local' in out[0]
-    assert [''] == err
-
-
 def test_close_over_function_parameter():
     helper = InterpreterTestHelper(
         source_file=os.path.join(
@@ -89,6 +75,20 @@ def test_close_over_method_parameter():
     err = helper.get_error()
     assert 1 == len(out)
     assert 'param' in out[0]
+    assert [''] == err
+
+
+def test_closed_closure_in_function():
+    helper = InterpreterTestHelper(
+        source_file=os.path.join(
+            '..', 'jlox', 'src', 'test', 'resources', 'programs', 'closure', 'closed_closure_in_function.lox'
+        )
+    )
+    helper.run()
+    out = helper.get_output()
+    err = helper.get_error()
+    assert 1 == len(out)
+    assert 'local' in out[0]
     assert [''] == err
 
 
