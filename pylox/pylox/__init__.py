@@ -1,5 +1,7 @@
+import json
 import sys
 
+from .dumper import Dumper
 from .error import PyLoxRuntimeError
 from .interface import InterpreterInterface
 from .interpreter import Interpreter, debugger
@@ -18,9 +20,11 @@ class PyLox(object):
     @staticmethod
     def run(interpreter: InterpreterInterface, code: str, error_file=sys.stderr, debug=False):
         try:
-            if debug:
-                interpreter = debugger(interpreter=interpreter)
+            # if debug:
+            #     interpreter = debugger(interpreter=interpreter)
             PyLox._has_error = False
+            PyLox._has_runtime_error = False
+
             pylox_scanner = Scanner(source=code, error_file=error_file)
             tokens = pylox_scanner.scan_tokens()
 
@@ -41,9 +45,38 @@ class PyLox(object):
             print(e, file=sys.stderr)
 
     @staticmethod
+    def dump(code: str, error_file=sys.stderr):
+        try:
+            PyLox._has_error = False
+            pylox_scanner = Scanner(source=code, error_file=error_file)
+            tokens = pylox_scanner.scan_tokens()
+
+            pylox_parser = Parser(tokens=tokens, error_file=error_file)
+            statements = pylox_parser.parse()
+
+            if PyLox._has_error:
+                return
+
+            result = Dumper().dump_statements(statements=statements)
+            print(json.dumps(result))
+        except Exception as e:
+            print(e, file=sys.stderr)
+
+    @staticmethod
     def run_file(file_path, debug=False):
         with open(file=file_path, mode='r') as f:
             PyLox.run(interpreter=Interpreter(), code=f.read(), debug=debug)
+        if PyLox._has_error:
+            sys.exit(status=65)
+        if PyLox._has_runtime_error:
+            sys.exit(status=70)
+
+    @staticmethod
+    def dump_file(file_path, debug=False):
+        with open(file=file_path, mode='r') as f:
+            PyLox.dump(code=f.read())
+        if PyLox._has_error:
+            sys.exit(status=65)
 
     @staticmethod
     def run_prompt(debug=False):
@@ -54,6 +87,15 @@ class PyLox(object):
             if not line:
                 break
             PyLox.run(interpreter=interpreter, code=line, debug=debug)
+
+    @staticmethod
+    def dump_prompt(debug=False):
+        print('PyLox', __version__)
+        while True:
+            line = input('$ ')
+            if not line:
+                break
+            PyLox.dump(code=line)
 
     @staticmethod
     def error(line, message, error_file=sys.stderr):
