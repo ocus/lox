@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author Matthieu Honel <matthieu.honel@vectaury.io>
+ * @author OcuS <ocus51@gmail.com>
  * @since 2017-08-11
  */
 public class AstSourceHtmlPrinter implements Stmt.Visitor<String>, Expr.Visitor<String> {
