@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Matthieu Honel <matthieu.honel@vectaury.io>
+ * @author OcuS <ocus51@gmail.com>
  * @since 2017-08-11
  */
 public class LoxClass implements LoxCallable {

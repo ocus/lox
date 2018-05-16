@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
- * @author Matthieu Honel <matthieu.honel@vectaury.io>
+ * @author OcuS <ocus51@gmail.com>
  * @since 2017-08-18
  */
 public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
